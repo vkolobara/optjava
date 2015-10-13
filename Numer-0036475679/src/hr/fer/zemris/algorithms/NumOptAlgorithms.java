@@ -8,7 +8,7 @@ import hr.fer.zemris.function.IHFunction;
 
 public class NumOptAlgorithms {
 
-	public final static double EPS = 10E-4;
+	public final static double EPS = 10E-2;
 	
 	public static RealVector gradientDescent(IFunction function, int maxIters, RealVector x0){
 		
@@ -21,12 +21,12 @@ public class NumOptAlgorithms {
 			System.out.println(solution);
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
-			for ( ; i<numOfVariables; i++) {
-				if (Math.abs(grad.getEntry(i)) > EPS) break; 
+			for ( ; i<numOfVariables; ++i) {
+				if (Math.abs(grad.getEntry(i)) >= EPS) break; 
 			}
 			//ako je došao do kraja i nijedan nije bio veći od EPS
 			//nađeno je rješenje
-			if (i+1 == numOfVariables) break;
+			if (i == numOfVariables) break;
 			
 			RealVector d = grad.mapMultiply(-1);
 			
@@ -47,17 +47,17 @@ public class NumOptAlgorithms {
 		int t=0;
 		
 		do {
+			System.out.println(solution);
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
-			for ( ; i<numOfVariables; i++) {
+			for ( ; i<numOfVariables; ++i) {
 				if (Math.abs(grad.getEntry(i)) > EPS) break; 
 			}
 			//ako je došao do kraja i nijedan nije bio veći od EPS
 			//nađeno je rješenje
-			if (i+1 == numOfVariables) break;
+			if (i == numOfVariables) break;
 			
 			RealVector d = MatrixUtils.inverse(function.calculateHesse(solution)).preMultiply(grad).mapMultiply(-1);
-			
 			
 			double lambda = bisection(function, solution, d);
 			solution = solution.add(d.mapMultiply(lambda));
@@ -76,12 +76,12 @@ public class NumOptAlgorithms {
 		do {
 			dTheta = function.calculateGradient(x.add(d.mapMultiply(upperBound))).dotProduct(d);
 			upperBound *= 2;
-
 		} while (dTheta < 0);
+		
 		double lambda;
 		do {
-			lambda = (lowerBound + upperBound) / 2;
-			
+
+			lambda = (lowerBound + upperBound) / 2;			
 			double deriv = function.calculateGradient(x.add(d.mapMultiply(lambda))).dotProduct(d);
 			
 			if (Math.abs(deriv) < EPS) {

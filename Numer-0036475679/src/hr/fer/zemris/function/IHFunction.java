@@ -6,5 +6,6 @@ import org.apache.commons.math3.linear.RealVector;
 public interface IHFunction extends IFunction{
 	
 	public RealMatrix calculateHesse(RealVector x);
+	
 
 }

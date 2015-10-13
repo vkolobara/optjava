@@ -15,12 +15,8 @@ public class Jednostavno {
 
 	
 	public static void main(String[] args) {
-		prviA();
-		System.out.println();
-		prviB();
-		System.out.println();
+	
 		drugiA();
-		System.out.println();
 	}
 	
 	
@@ -99,7 +95,7 @@ public class Jednostavno {
 			vector[i] = rand.nextDouble() * 10 + -5;
 		}
 		
-		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(vector));
+		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(vector));
 	}
 	
 	public static void drugiA() {
@@ -134,6 +130,48 @@ public class Jednostavno {
 		}
 		
 		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(vector));
+	}
+	
+	public static void drugiB() {
+		IHFunction function = new IHFunction() {
+			
+			@Override
+			public int getNumOfVariables() {
+				return 2;
+			}
+			
+			@Override
+			public double calculateValue(RealVector x) {
+				return Math.pow(x.getEntry(0) - 1, 2) + 10 * Math.pow(x.getEntry(1) - 2, 2);
+			}
+			
+			@Override
+			public RealVector calculateGradient(RealVector x) {
+				return new ArrayRealVector(new double[] {
+						2 * (x.getEntry(0) - 1),
+						20 * (x.getEntry(1) - 2)
+				});
+			}
+
+			@Override
+			public RealMatrix calculateHesse(RealVector x) {
+				return new Array2DRowRealMatrix(new double[][] {
+					{2, 0},
+					{0, 20}
+				});
+			}
+		};
+		
+		Random rand = new Random();
+		int numOfVariables = function.getNumOfVariables();
+		
+		double[] vector = new double[numOfVariables];
+				
+		for (int i=0; i<numOfVariables; i++) {
+			vector[i] = rand.nextDouble() * 10 + -5;
+		}
+		
+		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(vector));
 	}
 	
 	
