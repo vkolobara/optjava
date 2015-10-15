@@ -24,7 +24,7 @@ public class Sustav {
 			RealMatrix mat = readFile("zad-sustav.txt");
 
 			gradientDescent(mat);
-			newtonOpt(mat);
+//			newtonOpt(mat);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -64,12 +64,12 @@ public class Sustav {
 		IFunction f = gradientFunction(equation);
 
 		Random rand = new Random();
-		int numOfVariables = f.getNumOfVariables();
+		int numOfVariables = equation.getColumnDimension()-1;
 
 		double[] vector = new double[numOfVariables];
 
 		for (int i = 0; i < numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 20 - 20;
+			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 
 		RealVector sol = NumOptAlgorithms.gradientDescent(f, 10000, new ArrayRealVector(vector));
@@ -87,7 +87,7 @@ public class Sustav {
 		double[] vector = new double[numOfVariables];
 
 		for (int i = 0; i < numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 20 - 20;
+			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 		
 		RealVector sol = NumOptAlgorithms.newtonOpt(f, 10000, new ArrayRealVector(vector));
@@ -134,13 +134,7 @@ public class Sustav {
 				for (int i = 0; i < size; i++) {
 					RealVector row = eq.getRowVector(i);
 
-					double sum = 0;
-
-					int j = 0;
-					for (double el : row.toArray()) {
-						sum += el * sol.getEntry(j++);
-					}
-
+					double sum = row.dotProduct(sol);
 					for (int k = 0; k < numOfVariables; k++) {
 						grad.setEntry(k, grad.getEntry(k) + 2 * sum * row.getEntry(k));
 					}
@@ -211,12 +205,7 @@ public class Sustav {
 				for (int i = 0; i < size; i++) {
 					RealVector row = eq.getRowVector(i);
 
-					double sum = 0;
-
-					int j = 0;
-					for (double el : row.toArray()) {
-						sum += el * sol.getEntry(j++);
-					}
+					double sum = row.dotProduct(sol);
 
 					for (int k = 0; k < numOfVariables; k++) {
 						grad.setEntry(k, grad.getEntry(k) + 2 * sum * row.getEntry(k));

@@ -16,7 +16,7 @@ public class Jednostavno {
 	
 	public static void main(String[] args) {
 	
-		drugiA();
+		prviA();
 	}
 	
 	
@@ -49,10 +49,12 @@ public class Jednostavno {
 		double[] vector = new double[numOfVariables];
 				
 		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 + -5;
+			vector[i] = rand.nextDouble() * 10 - 5;
 		}
 		
-		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(vector));
+		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(new double[] {
+				-5, -5
+		}));
 	}
 	
 	public static void prviB() {
@@ -92,10 +94,12 @@ public class Jednostavno {
 		double[] vector = new double[numOfVariables];
 				
 		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 + -5;
+			vector[i] = rand.nextDouble() * 10 - 5;
 		}
 		
-		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(vector));
+		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(new double[] {
+				-5, -5
+		}));
 	}
 	
 	public static void drugiA() {
@@ -126,10 +130,12 @@ public class Jednostavno {
 		double[] vector = new double[numOfVariables];
 				
 		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 + -5;
+			vector[i] = rand.nextDouble() * 10 - 5;
 		}
 		
-		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(vector));
+		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(new double[] {
+				-5, -5
+		}));
 	}
 	
 	public static void drugiB() {
@@ -168,10 +174,12 @@ public class Jednostavno {
 		double[] vector = new double[numOfVariables];
 				
 		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 + -5;
+			vector[i] = rand.nextDouble() * 10 - 5;
 		}
 		
-		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(vector));
+		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(new double[] {
+				-5, -5
+		}));
 	}
 	
 	

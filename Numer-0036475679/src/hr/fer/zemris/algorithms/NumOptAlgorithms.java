@@ -1,5 +1,7 @@
 package hr.fer.zemris.algorithms;
 
+import java.math.BigDecimal;
+
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealVector;
 
@@ -8,7 +10,7 @@ import hr.fer.zemris.function.IHFunction;
 
 public class NumOptAlgorithms {
 
-	public final static double EPS = 10E-2;
+	public final static double EPS = 10E-4;
 	
 	public static RealVector gradientDescent(IFunction function, int maxIters, RealVector x0){
 		
@@ -18,7 +20,9 @@ public class NumOptAlgorithms {
 		int t=0;
 		
 		do {
-			System.out.println(solution);
+			System.out.println("Rj: " + solution);
+			System.out.println("Err: " + function.calculateValue(solution));
+			
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
 			for ( ; i<numOfVariables; ++i) {
@@ -30,8 +34,12 @@ public class NumOptAlgorithms {
 			
 			RealVector d = grad.mapMultiply(-1);
 			
+
 			double lambda = bisection(function, solution, d);
+			System.out.println("d: " + d);
+			System.out.println("D: " + d.mapMultiply(lambda));
 			solution = solution.add(d.mapMultiply(lambda));
+	
 			t++;
 		} while (t < maxIters);
 		
@@ -48,10 +56,13 @@ public class NumOptAlgorithms {
 		
 		do {
 			System.out.println(solution);
+			System.out.println("Err: " + function.calculateValue(solution));
+
+
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
 			for ( ; i<numOfVariables; ++i) {
-				if (Math.abs(grad.getEntry(i)) > EPS) break; 
+				if (Math.abs(grad.getEntry(i)) >= EPS) break; 
 			}
 			//ako je došao do kraja i nijedan nije bio veći od EPS
 			//nađeno je rješenje
@@ -79,11 +90,10 @@ public class NumOptAlgorithms {
 		} while (dTheta < 0);
 		
 		double lambda;
+		int t=0;
 		do {
-
-			lambda = (lowerBound + upperBound) / 2;			
+			lambda = (lowerBound + upperBound) / 2;	
 			double deriv = function.calculateGradient(x.add(d.mapMultiply(lambda))).dotProduct(d);
-			
 			if (Math.abs(deriv) < EPS) {
 				break;
 			} else if (deriv < 0) {
@@ -92,8 +102,9 @@ public class NumOptAlgorithms {
 				upperBound = lambda;
 			}
 			
-		} while (true);
+		} while (t++ < 10);
 		
+		System.out.println("Lambda: " + lambda);
 		return lambda;
 		
 	}
