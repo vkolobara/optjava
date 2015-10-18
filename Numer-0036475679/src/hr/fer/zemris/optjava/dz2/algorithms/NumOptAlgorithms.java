@@ -8,7 +8,8 @@ import hr.fer.zemris.optjava.function.IHFunction;
 
 public class NumOptAlgorithms {
 
-	public final static double EPS = 10E-2;
+	private final static double EPS = 10E-2;
+	private final static int BISECTION_LIMIT = 100;
 	
 	public static RealVector gradientDescent(IFunction function, int maxIters, RealVector x0, boolean printSteps){
 		
@@ -98,7 +99,7 @@ public class NumOptAlgorithms {
 				upperBound = lambda;
 			}
 			
-		} while (t++ < 100);
+		} while (t++ < BISECTION_LIMIT);
 		
 		return lambda;
 		
