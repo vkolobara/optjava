@@ -99,7 +99,7 @@ public class Jednostavno {
 			}
 		}
 	
-		NumOptAlgorithms.gradientDescent(function, maxIter, new ArrayRealVector(vector));
+		NumOptAlgorithms.gradientDescent(function, maxIter, new ArrayRealVector(vector), true);
 	}
 	
 	public static void prviB(double[] startPoint, int maxIter) {
@@ -146,7 +146,7 @@ public class Jednostavno {
 		}
 	
 		
-		NumOptAlgorithms.newtonOpt(function, maxIter, new ArrayRealVector(vector));
+		NumOptAlgorithms.newtonOpt(function, maxIter, new ArrayRealVector(vector), true);
 	}
 	
 	public static void drugiA(double[] startPoint, int maxIter) {
@@ -185,7 +185,7 @@ public class Jednostavno {
 		}
 	
 		
-		NumOptAlgorithms.gradientDescent(function, maxIter, new ArrayRealVector(vector));
+		NumOptAlgorithms.gradientDescent(function, maxIter, new ArrayRealVector(vector), true);
 	}
 	
 	public static void drugiB(double[] startPoint, int maxIter) {
@@ -231,7 +231,7 @@ public class Jednostavno {
 			}
 		}
 	
-		NumOptAlgorithms.newtonOpt(function, maxIter, new ArrayRealVector(vector));
+		NumOptAlgorithms.newtonOpt(function, maxIter, new ArrayRealVector(vector), true);
 	}
 	
 	

@@ -83,9 +83,9 @@ public class Prijenosna {
 			vector[i] = rand.nextDouble() * 10 - 5;
 		}
 
-		RealVector sol = NumOptAlgorithms.gradientDescent(f, maxIters, new ArrayRealVector(vector));
-
-		System.out.println(f.calculateValue(sol));
+		RealVector sol = NumOptAlgorithms.gradientDescent(f, maxIters, new ArrayRealVector(vector), false);
+		System.out.println("Rješenje: " + sol);
+		System.out.println("Greška: " + f.calculateValue(sol));
 		return sol;
 		
 	}
@@ -102,9 +102,9 @@ public class Prijenosna {
 			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 		
-		RealVector sol = NumOptAlgorithms.newtonOpt(f, maxIters, new ArrayRealVector(vector));
-		System.out.println(f.calculateValue(sol));
-
+		RealVector sol = NumOptAlgorithms.newtonOpt(f, maxIters, new ArrayRealVector(vector), false);
+		System.out.println("Rješenje: " + sol);
+		System.out.println("Greška: " + f.calculateValue(sol));
 		return sol;
 	}
 
@@ -207,7 +207,6 @@ public class Prijenosna {
 					}
 					
 				}			
-				System.out.println(hesse);
 				return hesse;
 			}
 			

@@ -82,9 +82,9 @@ public class Sustav {
 			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 
-		RealVector sol = NumOptAlgorithms.gradientDescent(f, maxIter, new ArrayRealVector(vector));
-		System.out.println(f.calculateValue(sol));
-
+		RealVector sol = NumOptAlgorithms.gradientDescent(f, maxIter, new ArrayRealVector(vector), false);
+		System.out.println("Rješenje: " + sol);
+		System.out.println("Greška: " + f.calculateValue(sol));
 		return sol;
 	}
 	
@@ -100,9 +100,9 @@ public class Sustav {
 			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 		
-		RealVector sol = NumOptAlgorithms.newtonOpt(f, maxIter, new ArrayRealVector(vector));
-		System.out.println(f.calculateValue(sol));
-
+		RealVector sol = NumOptAlgorithms.newtonOpt(f, maxIter, new ArrayRealVector(vector), false);
+		System.out.println("Rješenje: " + sol);
+		System.out.println("Greška: " + f.calculateValue(sol));
 		return sol;
 	}
 	

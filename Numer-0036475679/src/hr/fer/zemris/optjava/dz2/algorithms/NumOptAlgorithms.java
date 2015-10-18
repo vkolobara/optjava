@@ -10,7 +10,7 @@ public class NumOptAlgorithms {
 
 	public final static double EPS = 10E-2;
 	
-	public static RealVector gradientDescent(IFunction function, int maxIters, RealVector x0){
+	public static RealVector gradientDescent(IFunction function, int maxIters, RealVector x0, boolean printSteps){
 		
 		int numOfVariables = function.getNumOfVariables();
 		RealVector solution = x0;
@@ -18,7 +18,9 @@ public class NumOptAlgorithms {
 		int t=0;
 		
 		do {
-			//System.out.println(solution);
+			if (printSteps) {
+				System.out.println(solution);
+			}
 			
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
@@ -30,7 +32,6 @@ public class NumOptAlgorithms {
 			if (i == numOfVariables) break;
 			
 			RealVector d = grad.mapMultiply(-1).unitVector();
-			
 
 			double lambda = bisection(function, solution, d);
 			solution = solution.add(d.mapMultiply(lambda));
@@ -43,14 +44,16 @@ public class NumOptAlgorithms {
 		
 	}
 	
-	public static RealVector newtonOpt(IHFunction function, int maxIters, RealVector x0) {
+	public static RealVector newtonOpt(IHFunction function, int maxIters, RealVector x0, boolean printSteps) {
 		int numOfVariables = function.getNumOfVariables();
 		RealVector solution = x0;
 		
 		int t=0;
 		
 		do {
-			System.out.println(solution);
+			if (printSteps) {
+				System.out.println(solution);
+			}
 
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
