@@ -7,20 +7,64 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import hr.fer.zemris.algorithms.NumOptAlgorithms;
-import hr.fer.zemris.function.IFunction;
-import hr.fer.zemris.function.IHFunction;
+import hr.fer.zemris.optjava.dz2.algorithms.NumOptAlgorithms;
+import hr.fer.zemris.optjava.function.IFunction;
+import hr.fer.zemris.optjava.function.IHFunction;
 
 public class Jednostavno {
 
 	
 	public static void main(String[] args) {
 	
-		prviA();
+		if (args.length != 2 && args.length !=4) {
+			throw new IllegalArgumentException("Potrebna 2 ili 4 argumenta!");
+		}
+		
+		double[] startPoint = null;
+		
+		if (args.length == 4) {
+			 startPoint = new double[2];
+			try {
+				startPoint[0] = Double.parseDouble(args[2]);
+				startPoint[1] = Double.parseDouble(args[3]);
+				chooseAlgTask(args[0], Integer.parseInt(args[1]), startPoint);
+			} catch (Exception e) {
+				throw new IllegalArgumentException("Pogrešni argumenti!");
+			}
+		} else {
+			try {
+				chooseAlgTask(args[0], Integer.parseInt(args[1]), startPoint);
+			}  catch (Exception e) {
+				throw new IllegalArgumentException("Pogrešni argumenti!");
+			}
+		}
+		
+	
 	}
 	
 	
-	public static void prviA() {
+	private static void chooseAlgTask(String alg, int maxIter, double[] startPoint) {
+		switch(alg) {
+		case "1a":
+			prviA(startPoint, maxIter);
+			break;
+		case "2a":
+			drugiA(startPoint, maxIter);
+			break;
+		case "1b": 
+			prviB(startPoint, maxIter);
+			break;
+		case "2b":
+			drugiB(startPoint, maxIter);
+			break;
+		default:
+			throw new IllegalArgumentException("Error");
+		}
+		
+	}
+
+
+	public static void prviA(double[] startPoint, int maxIter) {
 		IFunction function = new IFunction() {
 			
 			@Override
@@ -45,19 +89,20 @@ public class Jednostavno {
 		
 		Random rand = new Random();
 		int numOfVariables = function.getNumOfVariables();
-		
 		double[] vector = new double[numOfVariables];
-				
-		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 - 5;
+
+		if (startPoint != null) {
+			vector = startPoint;
+		} else {
+			for (int i=0; i<numOfVariables; i++) {
+				vector[i] = rand.nextDouble() * 10 - 5;
+			}
 		}
-		
-		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(new double[] {
-				-5, -5
-		}));
+	
+		NumOptAlgorithms.gradientDescent(function, maxIter, new ArrayRealVector(vector));
 	}
 	
-	public static void prviB() {
+	public static void prviB(double[] startPoint, int maxIter) {
 		IHFunction function = new IHFunction() {
 			
 			@Override
@@ -90,19 +135,21 @@ public class Jednostavno {
 		
 		Random rand = new Random();
 		int numOfVariables = function.getNumOfVariables();
-		
 		double[] vector = new double[numOfVariables];
-				
-		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 - 5;
+
+		if (startPoint != null) {
+			vector = startPoint;
+		} else {
+			for (int i=0; i<numOfVariables; i++) {
+				vector[i] = rand.nextDouble() * 10 - 5;
+			}
 		}
+	
 		
-		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(new double[] {
-				-5, -5
-		}));
+		NumOptAlgorithms.newtonOpt(function, maxIter, new ArrayRealVector(vector));
 	}
 	
-	public static void drugiA() {
+	public static void drugiA(double[] startPoint, int maxIter) {
 		IFunction function = new IFunction() {
 			
 			@Override
@@ -128,17 +175,20 @@ public class Jednostavno {
 		int numOfVariables = function.getNumOfVariables();
 		
 		double[] vector = new double[numOfVariables];
-				
-		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 - 5;
+
+		if (startPoint != null) {
+			vector = startPoint;
+		} else {
+			for (int i=0; i<numOfVariables; i++) {
+				vector[i] = rand.nextDouble() * 10 - 5;
+			}
 		}
+	
 		
-		NumOptAlgorithms.gradientDescent(function, 100, new ArrayRealVector(new double[] {
-				-5, -5
-		}));
+		NumOptAlgorithms.gradientDescent(function, maxIter, new ArrayRealVector(vector));
 	}
 	
-	public static void drugiB() {
+	public static void drugiB(double[] startPoint, int maxIter) {
 		IHFunction function = new IHFunction() {
 			
 			@Override
@@ -172,14 +222,16 @@ public class Jednostavno {
 		int numOfVariables = function.getNumOfVariables();
 		
 		double[] vector = new double[numOfVariables];
-				
-		for (int i=0; i<numOfVariables; i++) {
-			vector[i] = rand.nextDouble() * 10 - 5;
+
+		if (startPoint != null) {
+			vector = startPoint;
+		} else {
+			for (int i=0; i<numOfVariables; i++) {
+				vector[i] = rand.nextDouble() * 10 - 5;
+			}
 		}
-		
-		NumOptAlgorithms.newtonOpt(function, 100, new ArrayRealVector(new double[] {
-				-5, -5
-		}));
+	
+		NumOptAlgorithms.newtonOpt(function, maxIter, new ArrayRealVector(vector));
 	}
 	
 	

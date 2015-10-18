@@ -12,21 +12,34 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import hr.fer.zemris.algorithms.NumOptAlgorithms;
-import hr.fer.zemris.function.IFunction;
-import hr.fer.zemris.function.IHFunction;
+import hr.fer.zemris.optjava.dz2.algorithms.NumOptAlgorithms;
+import hr.fer.zemris.optjava.function.IFunction;
+import hr.fer.zemris.optjava.function.IHFunction;
+
 
 public class Prijenosna {
 
 	public static void main(String[] args) {
 		
+		if (args.length != 3) {
+			throw new IllegalArgumentException("Moraju biti zadana 3 argumenta!");
+		}
 		try {
-			RealMatrix mat = readFile("zad-prijenosna.txt");
+			RealMatrix mat = readFile(args[2]);
+			int maxIters = Integer.parseInt(args[1]);
+			
+			String arg = args[0];
+			
+			if (arg.equals("grad")) {
+				gradientDescent(mat, maxIters);
+			} else if (arg.equals("newton")) {
+				newtonOpt(mat, maxIters);
+			} else {
+				throw new IllegalArgumentException("Greška!");
+			}
 
-			newtonOpt(mat);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IllegalArgumentException("Pogrešni argumenti!");
 		}
 	}
 	
@@ -58,7 +71,7 @@ public class Prijenosna {
 
 	}
 
-	private static RealVector gradientDescent(RealMatrix equation) {
+	private static RealVector gradientDescent(RealMatrix equation, int maxIters) {
 		
 		IFunction f = gradientFunction(equation);
 		Random rand = new Random();
@@ -70,13 +83,14 @@ public class Prijenosna {
 			vector[i] = rand.nextDouble() * 10 - 5;
 		}
 
-		RealVector sol = NumOptAlgorithms.gradientDescent(f, 100, new ArrayRealVector(vector));
+		RealVector sol = NumOptAlgorithms.gradientDescent(f, maxIters, new ArrayRealVector(vector));
+
 		System.out.println(f.calculateValue(sol));
 		return sol;
 		
 	}
 	
-	private static RealVector newtonOpt(RealMatrix equation) {
+	private static RealVector newtonOpt(RealMatrix equation, int maxIters) {
 		IHFunction f = newtonFunction(equation);
 
 		Random rand = new Random();
@@ -88,7 +102,7 @@ public class Prijenosna {
 			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 		
-		RealVector sol = NumOptAlgorithms.newtonOpt(f, 100000, new ArrayRealVector(vector));
+		RealVector sol = NumOptAlgorithms.newtonOpt(f, maxIters, new ArrayRealVector(vector));
 		System.out.println(f.calculateValue(sol));
 
 		return sol;
@@ -131,7 +145,7 @@ public class Prijenosna {
 						grad.addToEntry(j, 2*sum*gradValue(j, row, x));
 					}
 				}
-				return grad;
+				return grad.unitVector();
 			}
 		};
 		return f;
@@ -193,6 +207,7 @@ public class Prijenosna {
 					}
 					
 				}			
+				System.out.println(hesse);
 				return hesse;
 			}
 			
@@ -233,18 +248,14 @@ public class Prijenosna {
 	 * @return vraća parcijalnu derivaciju po index-toj varijabli (samo unutrašnji dio)
 	 */
 	private static double gradValue(int index, RealVector row, RealVector x) {
-		double a = x.getEntry(0);
-		double b = x.getEntry(1);
 		double c = x.getEntry(2);
 		double d = x.getEntry(3);
 		double e = x.getEntry(4);
-		double f = x.getEntry(5);
 		double x1 = row.getEntry(0);
 		double x2 = row.getEntry(1);
 		double x3 = row.getEntry(2);
 		double x4 = row.getEntry(3);
 		double x5 = row.getEntry(4);
-		double y = row.getEntry(5);
 		double val = 0;
 		
 		switch(index) {

@@ -1,4 +1,4 @@
-package hr.fer.zemris.function;
+package hr.fer.zemris.optjava.function;
 
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;

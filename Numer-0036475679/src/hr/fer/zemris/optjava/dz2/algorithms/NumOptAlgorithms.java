@@ -1,16 +1,14 @@
-package hr.fer.zemris.algorithms;
-
-import java.math.BigDecimal;
+package hr.fer.zemris.optjava.dz2.algorithms;
 
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.apache.commons.math3.linear.RealVector;
 
-import hr.fer.zemris.function.IFunction;
-import hr.fer.zemris.function.IHFunction;
+import hr.fer.zemris.optjava.function.IFunction;
+import hr.fer.zemris.optjava.function.IHFunction;
 
 public class NumOptAlgorithms {
 
-	public final static double EPS = 10E-4;
+	public final static double EPS = 10E-2;
 	
 	public static RealVector gradientDescent(IFunction function, int maxIters, RealVector x0){
 		
@@ -20,8 +18,7 @@ public class NumOptAlgorithms {
 		int t=0;
 		
 		do {
-			System.out.println("Rj: " + solution);
-			System.out.println("Err: " + function.calculateValue(solution));
+			//System.out.println(solution);
 			
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
@@ -32,12 +29,10 @@ public class NumOptAlgorithms {
 			//nađeno je rješenje
 			if (i == numOfVariables) break;
 			
-			RealVector d = grad.mapMultiply(-1);
+			RealVector d = grad.mapMultiply(-1).unitVector();
 			
 
 			double lambda = bisection(function, solution, d);
-			System.out.println("d: " + d);
-			System.out.println("D: " + d.mapMultiply(lambda));
 			solution = solution.add(d.mapMultiply(lambda));
 	
 			t++;
@@ -56,8 +51,6 @@ public class NumOptAlgorithms {
 		
 		do {
 			System.out.println(solution);
-			System.out.println("Err: " + function.calculateValue(solution));
-
 
 			RealVector grad = function.calculateGradient(solution);
 			int i=0;
@@ -102,9 +95,8 @@ public class NumOptAlgorithms {
 				upperBound = lambda;
 			}
 			
-		} while (t++ < 10);
+		} while (t++ < 100);
 		
-		System.out.println("Lambda: " + lambda);
 		return lambda;
 		
 	}

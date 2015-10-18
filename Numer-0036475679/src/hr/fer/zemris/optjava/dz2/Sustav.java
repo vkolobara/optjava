@@ -12,23 +12,33 @@ import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.RealVector;
 
-import hr.fer.zemris.algorithms.NumOptAlgorithms;
-import hr.fer.zemris.function.IFunction;
-import hr.fer.zemris.function.IHFunction;
+import hr.fer.zemris.optjava.dz2.algorithms.NumOptAlgorithms;
+import hr.fer.zemris.optjava.function.IFunction;
+import hr.fer.zemris.optjava.function.IHFunction;
 
 public class Sustav {
 
 	public static void main(String[] args) {
 
+		if (args.length != 3) {
+			throw new IllegalArgumentException("Moraju biti zadana 3 argumenta!");
+		}
 		try {
-			RealMatrix mat = readFile("zad-sustav.txt");
-
-			gradientDescent(mat);
-//			newtonOpt(mat);
+			RealMatrix mat = readFile(args[2]);
+			int maxIters = Integer.parseInt(args[1]);
 			
+			String arg = args[0];
+			
+			if (arg.equals("grad")) {
+				gradientDescent(mat, maxIters);
+			} else if (arg.equals("newton")) {
+				newtonOpt(mat, maxIters);
+			} else {
+				throw new IllegalArgumentException("Greška!");
+			}
+
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new IllegalArgumentException("Pogrešni argumenti!");
 		}
 	}
 
@@ -60,7 +70,7 @@ public class Sustav {
 
 	}
 
-	private static RealVector gradientDescent(RealMatrix equation) {
+	private static RealVector gradientDescent(RealMatrix equation, int maxIter) {
 		IFunction f = gradientFunction(equation);
 
 		Random rand = new Random();
@@ -72,13 +82,13 @@ public class Sustav {
 			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 
-		RealVector sol = NumOptAlgorithms.gradientDescent(f, 10000, new ArrayRealVector(vector));
+		RealVector sol = NumOptAlgorithms.gradientDescent(f, maxIter, new ArrayRealVector(vector));
 		System.out.println(f.calculateValue(sol));
 
 		return sol;
 	}
 	
-	private static RealVector newtonOpt(RealMatrix equation) {
+	private static RealVector newtonOpt(RealMatrix equation, int maxIter) {
 		IHFunction f = newtonFunction(equation);
 
 		Random rand = new Random();
@@ -90,7 +100,7 @@ public class Sustav {
 			vector[i] = rand.nextDouble() * 20 - 10;
 		}
 		
-		RealVector sol = NumOptAlgorithms.newtonOpt(f, 10000, new ArrayRealVector(vector));
+		RealVector sol = NumOptAlgorithms.newtonOpt(f, maxIter, new ArrayRealVector(vector));
 		System.out.println(f.calculateValue(sol));
 
 		return sol;
