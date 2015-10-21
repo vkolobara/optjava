@@ -27,12 +27,12 @@ public class GeometricTempSchedule implements ITempSchedule {
 
 	@Override
 	public int getInnerLoopCounter() {
-		return 0;
+		return innerLimit;
 	}
 
 	@Override
 	public int getOuterLoopCounter() {
-		return 0;
+		return outerLimit;
 	}
 
 }

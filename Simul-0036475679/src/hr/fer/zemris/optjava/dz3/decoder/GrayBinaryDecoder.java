@@ -19,7 +19,7 @@ public class GrayBinaryDecoder extends BitvectorDecoder {
 		double[] decoded = new double[n];
 		int currPos = 0;
 		for (int i = 0; i < n; i++) {
-			decoded[i] = decodeGray(Arrays.copyOfRange(code.bits, currPos, currPos + bits[i]));
+			decoded[i] = decodeGray(Arrays.copyOfRange(code.bits, currPos, currPos + bits[i]), i);
 			currPos = currPos + bits[i];
 		}
 
@@ -31,7 +31,7 @@ public class GrayBinaryDecoder extends BitvectorDecoder {
 		field = decode(code);
 	}
 
-	private double decodeGray(boolean[] code) {
+	private double decodeGray(boolean[] code, int ind) {
 		boolean[] decoded = new boolean[code.length];
 
 		decoded[0] = code[0];
@@ -45,8 +45,7 @@ public class GrayBinaryDecoder extends BitvectorDecoder {
 		for (boolean b : decoded) {
 			value = (value << 1) | (b ? 1 : 0);
 		}
-
-		return value;
+		return mins[ind] + 1.0*value/Math.pow(2, bits[ind]) * (maxs[ind] - mins[ind]) ;
 	}
 
 }

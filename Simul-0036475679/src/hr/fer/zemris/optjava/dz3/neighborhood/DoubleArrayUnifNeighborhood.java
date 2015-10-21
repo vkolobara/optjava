@@ -17,8 +17,9 @@ public class DoubleArrayUnifNeighborhood implements INeighborhood<DoubleArraySol
 	
 	@Override
 	public DoubleArraySolution randomNeighbor(DoubleArraySolution solution) {
-		//TODO
-		return null;
+		DoubleArraySolution neighbor = solution.newLikeThis();
+		neighbor.randomize(rand, solution.values, deltas);
+		return neighbor;
 	}
 
 

@@ -7,9 +7,15 @@ import hr.fer.zemris.optjava.dz3.decoder.IDecoder;
 import hr.fer.zemris.optjava.dz3.function.IFunction;
 import hr.fer.zemris.optjava.dz3.neighborhood.INeighborhood;
 import hr.fer.zemris.optjava.dz3.schedule.ITempSchedule;
+import hr.fer.zemris.optjava.dz3.solution.BitvectorSolution;
+import hr.fer.zemris.optjava.dz3.solution.DoubleArraySolution;
+import hr.fer.zemris.optjava.dz3.solution.SingleObjectiveSolution;
 
 public class SimulatedAnnealing<T> implements IOptAlgorithm<T> {
 
+	private final static double A1 = 0.80;
+	private final static double X = 0.95;
+	
 	private IDecoder<T> decoder;
 	private INeighborhood<T> neighborhood;
 	private T startWith;
@@ -27,12 +33,35 @@ public class SimulatedAnnealing<T> implements IOptAlgorithm<T> {
 		this.function = function;
 		this.minimize = minimize;
 		this.schedule = schedule;
+		rand = new Random();
 	}
 
 	@Override
-	public void run() {
-
+	public T run() {
 		
+		T solution = startWith;
+		int k=0;
+		int outerLimit = schedule.getOuterLoopCounter();
+		int innerLimit = schedule.getInnerLoopCounter();
+		
+		do {
+			int m=0;
+			
+			do {
+				T neighbor = neighborhood.randomNeighbor(solution);
+
+				double dE = function.valueAt(decoder.decode(solution)) - function.valueAt(decoder.decode(neighbor));
+				if (!minimize) dE = -dE;
+				
+				if (dE < 0) {
+					solution = neighbor;
+				} else if (rand.nextDouble() <= A1 * Math.pow(X, k-1)){
+					solution = neighbor;
+				}
+			} while (m++<innerLimit);
+		} while(k++<outerLimit);
+		
+		return solution;
 	}
 
 }
