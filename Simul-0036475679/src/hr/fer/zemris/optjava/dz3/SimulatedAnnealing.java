@@ -13,8 +13,8 @@ import hr.fer.zemris.optjava.dz3.solution.SingleObjectiveSolution;
 
 public class SimulatedAnnealing<T> implements IOptAlgorithm<T> {
 
-	private final static double A1 = 0.80;
-	private final static double X = 0.95;
+	private final static double A1 = 0.6;
+	private final static double X = 0.8;
 	
 	private IDecoder<T> decoder;
 	private INeighborhood<T> neighborhood;
@@ -46,21 +46,22 @@ public class SimulatedAnnealing<T> implements IOptAlgorithm<T> {
 		
 		do {
 			int m=0;
-			
+
 			do {
 				T neighbor = neighborhood.randomNeighbor(solution);
-
-				double dE = function.valueAt(decoder.decode(solution)) - function.valueAt(decoder.decode(neighbor));
+				double dE = function.valueAt(decoder.decode(neighbor)) - function.valueAt(decoder.decode(solution));
+								
 				if (!minimize) dE = -dE;
-				
+
 				if (dE < 0) {
 					solution = neighbor;
-				} else if (rand.nextDouble() <= A1 * Math.pow(X, k-1)){
+				} else if (rand.nextDouble() <= A1 * Math.pow(X, k)){
 					solution = neighbor;
 				}
 			} while (m++<innerLimit);
 		} while(k++<outerLimit);
-		
+		((SingleObjectiveSolution) solution).fitness = function.valueAt(decoder.decode(solution));
+		System.out.println(((SingleObjectiveSolution) solution).fitness);
 		return solution;
 	}
 

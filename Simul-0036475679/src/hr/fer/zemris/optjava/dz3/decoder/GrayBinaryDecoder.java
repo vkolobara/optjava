@@ -37,13 +37,13 @@ public class GrayBinaryDecoder extends BitvectorDecoder {
 		decoded[0] = code[0];
 
 		for (int i = 1; i < code.length; i++) {
-			decoded[i] = code[i] | decoded[i - 1];
+			decoded[i] = code[i] ^ decoded[i - 1];
 		}
 
 		long value = 0;
 
 		for (boolean b : decoded) {
-			value = (value << 1) | (b ? 1 : 0);
+			value = (value << 1) + (b ? 1 : 0);
 		}
 		return mins[ind] + 1.0*value/Math.pow(2, bits[ind]) * (maxs[ind] - mins[ind]) ;
 	}

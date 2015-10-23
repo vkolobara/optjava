@@ -14,6 +14,7 @@ import org.apache.commons.math3.linear.RealVector;
 
 import hr.fer.zemris.optjava.dz3.SimulatedAnnealing;
 import hr.fer.zemris.optjava.dz3.function.IFunction;
+import hr.fer.zemris.optjava.dz3.neighborhood.BinaryNeighborhood;
 import hr.fer.zemris.optjava.dz3.neighborhood.DoubleArrayUnifNeighborhood;
 import hr.fer.zemris.optjava.dz3.schedule.GeometricTempSchedule;
 import hr.fer.zemris.optjava.dz3.solution.BitvectorSolution;
@@ -41,25 +42,44 @@ public class Test {
 
 				return val;			}
 		};
-		double[] deltas = new double[]{
-				0.2, 0.2, 0.2, 0.2, 0.2, 0.2
+		double[] mins = new double[]{
+				-20, -20, -20, -20, -20, -20
 		};
-		double[] values = new double[]{
-				-5, 2, 4, 9, 11, 17
+		double[] maxs = new double[]{
+				20, 20, 20, 20, 20, 20
+		};
+		
+		double[] deltas = new double[]{
+				0.5, 0.5, 0.5, 0.5, 0.5, 0.5
 		};
 		Random rand = new Random();
 		
-		PassThroughDecoder decoder = new PassThroughDecoder();
-		DoubleArrayUnifNeighborhood neighborhood = new DoubleArrayUnifNeighborhood(deltas);
-		
-		DoubleArraySolution startWith = new DoubleArraySolution(6);
-		startWith.randomize(rand, values, deltas);
-		
-		GeometricTempSchedule schedule = new GeometricTempSchedule(0.8, 200, 100000, 1000);
+//		PassThroughDecoder decoder = new PassThroughDecoder();
+//		DoubleArrayUnifNeighborhood neighborhood = new DoubleArrayUnifNeighborhood(deltas);
+//		
+//		DoubleArraySolution startWith = new DoubleArraySolution(6);
+//		startWith.randomize(rand, mins, maxs);
+//		
+		GeometricTempSchedule schedule = new GeometricTempSchedule(0.95, 10, 1000, 1000);
 		boolean minimize = true;
+//		SimulatedAnnealing<DoubleArraySolution> sim = new SimulatedAnnealing<DoubleArraySolution>(decoder, neighborhood, startWith, function, schedule, minimize);
+//		System.out.println(sim.run());
+		int bits[] = new int[]{
+				10, 10, 10, 10, 10, 10
+		};
 		
-		SimulatedAnnealing<DoubleArraySolution> sim = new SimulatedAnnealing<DoubleArraySolution>(decoder, neighborhood, startWith, function, schedule, minimize);
-		System.out.println(sim.run());
+		BitvectorDecoder decoder = new GrayBinaryDecoder(mins, maxs, bits, 6);
+		BinaryNeighborhood neighborhood = new BinaryNeighborhood(bits, 6);
+		
+		BitvectorSolution startWith = new BitvectorSolution(10*6);
+		startWith.randomize(rand);
+		
+		SimulatedAnnealing<BitvectorSolution> sim = new SimulatedAnnealing<BitvectorSolution>(decoder, neighborhood, startWith, function, schedule, minimize);
+		BitvectorSolution sol = sim.run();
+		
+		for (double val : decoder.decode(sol)) {
+			System.out.print(val + " ");
+		}
 	}
 	
 	private static double calcFValue(RealVector row, double[] x) {

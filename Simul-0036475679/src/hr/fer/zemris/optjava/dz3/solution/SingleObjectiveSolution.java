@@ -4,7 +4,6 @@ public class SingleObjectiveSolution {
 
 	public double fitness;
 	public double value;
-	protected int konj;
 
 	public SingleObjectiveSolution() {
 	}

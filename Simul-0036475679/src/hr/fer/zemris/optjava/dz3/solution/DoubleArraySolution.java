@@ -15,15 +15,15 @@ public class DoubleArraySolution extends SingleObjectiveSolution {
 	}
 	
 	public DoubleArraySolution duplicate() {
-		DoubleArraySolution dup = new DoubleArraySolution(values.length);
+		DoubleArraySolution dup = newLikeThis();
 		System.arraycopy(values, 0, dup.values, 0, values.length);
 		return dup;
 	}
 	
-	public void randomize(Random rand, double[] values, double[] deltas) {
+	public void randomize(Random rand, double[] mins, double[] maxs) {
 		
 		for (int i=0; i<this.values.length; i++) {
-			values[i] = rand.nextBoolean() ? values[i] + deltas[i] : values[i] - deltas[i];
+			this.values[i] = rand.nextDouble() * (maxs[i]-mins[i]) + mins[i];
 		}
 		
 	}
