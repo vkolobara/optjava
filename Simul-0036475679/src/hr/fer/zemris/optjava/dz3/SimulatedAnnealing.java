@@ -61,7 +61,6 @@ public class SimulatedAnnealing<T> implements IOptAlgorithm<T> {
 			} while (m++<innerLimit);
 		} while(k++<outerLimit);
 		((SingleObjectiveSolution) solution).fitness = function.valueAt(decoder.decode(solution));
-		System.out.println(((SingleObjectiveSolution) solution).fitness);
 		return solution;
 	}
 
