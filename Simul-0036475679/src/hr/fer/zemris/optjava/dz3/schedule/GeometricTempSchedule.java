@@ -3,6 +3,7 @@ package hr.fer.zemris.optjava.dz3.schedule;
 public class GeometricTempSchedule implements ITempSchedule {
 
 	private double alpha;
+	@SuppressWarnings("unused")
 	private double tInitial;
 	private double tCurrent;
 	private int innerLimit;

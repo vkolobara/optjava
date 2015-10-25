@@ -7,8 +7,6 @@ import hr.fer.zemris.optjava.dz3.decoder.IDecoder;
 import hr.fer.zemris.optjava.dz3.function.IFunction;
 import hr.fer.zemris.optjava.dz3.neighborhood.INeighborhood;
 import hr.fer.zemris.optjava.dz3.schedule.ITempSchedule;
-import hr.fer.zemris.optjava.dz3.solution.BitvectorSolution;
-import hr.fer.zemris.optjava.dz3.solution.DoubleArraySolution;
 import hr.fer.zemris.optjava.dz3.solution.SingleObjectiveSolution;
 
 public class SimulatedAnnealing<T> implements IOptAlgorithm<T> {
