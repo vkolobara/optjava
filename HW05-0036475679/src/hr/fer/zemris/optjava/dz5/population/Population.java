@@ -1,9 +1,11 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.population;
 
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import hr.fer.zemris.optjava.dz5.Solution;
 
 /**
  * Predstavlja jednu populaciju rješenja.
@@ -16,7 +18,7 @@ public class Population<T extends Solution> {
 	/**
 	 * Populacija
 	 */
-	Set<T> population;
+	public Set<T> population;
 	
 	/**
 	 * Veličina populacije

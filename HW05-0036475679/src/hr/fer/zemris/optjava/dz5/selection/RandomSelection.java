@@ -1,6 +1,9 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.selection;
 
 import java.util.Random;
+
+import hr.fer.zemris.optjava.dz5.Solution;
+import hr.fer.zemris.optjava.dz5.population.Population;
 
 
 /**
@@ -24,7 +27,7 @@ public class RandomSelection implements Selection<Solution> {
 	
 	@Override
 	public Solution select(Object... args) {
-		return population.getPopulation().get(rand.nextInt(population.getSize()));
+		return population.getPopulation().get(rand.nextInt(population.population.size()));
 	}
 
 }

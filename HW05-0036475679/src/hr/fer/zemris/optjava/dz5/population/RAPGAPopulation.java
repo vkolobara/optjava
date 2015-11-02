@@ -1,7 +1,7 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.population;
 
-import hr.fer.zemris.optjava.dz5.Population;
 import hr.fer.zemris.optjava.dz5.Solution;
+import hr.fer.zemris.optjava.dz5.population.Population;
 
 public class RAPGAPopulation extends Population<Solution> {
 

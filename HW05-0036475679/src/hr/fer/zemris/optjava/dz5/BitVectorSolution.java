@@ -1,5 +1,6 @@
 package hr.fer.zemris.optjava.dz5;
 
+import java.util.Arrays;
 import java.util.Random;
 
 /**
@@ -73,6 +74,11 @@ public class BitVectorSolution extends Solution{
 	@Override
 	public int getSize() {
 		return n;
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(values);
 	}
 	
 }

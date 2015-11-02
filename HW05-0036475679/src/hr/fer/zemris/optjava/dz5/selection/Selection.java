@@ -1,4 +1,6 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.selection;
+
+import hr.fer.zemris.optjava.dz5.Solution;
 
 /**
  * Sučelje koje svaka selekcija treba implementirati.

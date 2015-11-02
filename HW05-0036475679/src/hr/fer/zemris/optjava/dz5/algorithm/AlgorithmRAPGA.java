@@ -1,6 +1,13 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.algorithm;
 
 import java.util.Random;
+
+import hr.fer.zemris.optjava.dz5.BitVectorSolution;
+import hr.fer.zemris.optjava.dz5.GeneticOperators;
+import hr.fer.zemris.optjava.dz5.Solution;
+import hr.fer.zemris.optjava.dz5.population.RAPGAPopulation;
+import hr.fer.zemris.optjava.dz5.selection.RandomSelection;
+import hr.fer.zemris.optjava.dz5.selection.TournamentSelection;
 
 /**
  * Implementacija RAPGA algoritma.
@@ -17,7 +24,6 @@ public class AlgorithmRAPGA implements Algorithm<Solution>{
 	private int n;
 	private int k;
 	
-	private double actSelPress;
 	private double maxSelPress;
 	private double compFactor;
 	
@@ -49,13 +55,14 @@ public class AlgorithmRAPGA implements Algorithm<Solution>{
 		generateRandomPop(pop);
 				
 outer:	while (true) {
+			System.out.println(compFactor);
+			System.out.println(pop.population.size());
 			TournamentSelection tSel = new TournamentSelection(pop);
 			RandomSelection rSel = new RandomSelection(pop);
 			int limit = (int) (pop.getSize() * maxSelPress);
 			RAPGAPopulation newPop = new RAPGAPopulation(maxPop);
 			
 			for (int i=0; i<limit; i++) {
-				
 				BitVectorSolution r1 = (BitVectorSolution) tSel.select(k);
 				BitVectorSolution r2 = (BitVectorSolution) rSel.select();
 				
@@ -63,18 +70,31 @@ outer:	while (true) {
 				child = GeneticOperators.mutate(child);
 				child.setFitness();
 
+				if (successfull(child, r1, r2)) {
+					newPop.add(child);
+				}
+				
 				if (newPop.isFull()) {
 					pop = newPop;
 					continue outer;
 				}
-				
-			}
 			
-			break;
+			}	
+			
+			if (newPop.population.size() < minPop){
+				break;
+			} else {
+				pop = newPop;
+			}
 		}
 		
-		
-		return null;
+		return pop.getBest();
+	}
+
+	private boolean successfull(BitVectorSolution child, BitVectorSolution r1, BitVectorSolution r2) {
+		double smallerFit = Math.min(r1.fitness, r2.fitness);
+		double biggerFit = Math.max(r1.fitness, r2.fitness);
+		return child.fitness >= smallerFit + compFactor * (biggerFit - smallerFit);
 	}
 
 	private BitVectorSolution randCrossover(BitVectorSolution r1, BitVectorSolution r2) {

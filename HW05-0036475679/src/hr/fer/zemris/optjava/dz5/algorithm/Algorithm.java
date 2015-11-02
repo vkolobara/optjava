@@ -1,4 +1,6 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.algorithm;
+
+import hr.fer.zemris.optjava.dz5.Solution;
 
 /**
  * Sučelje za algoritme

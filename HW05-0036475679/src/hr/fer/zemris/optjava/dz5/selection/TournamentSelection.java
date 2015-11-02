@@ -1,7 +1,10 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.selection;
 
 import java.util.List;
 import java.util.Random;
+
+import hr.fer.zemris.optjava.dz5.Solution;
+import hr.fer.zemris.optjava.dz5.population.Population;
 
 /**
  * Implementacija turnirske selekcije. Kao argument select metodi mora biti
@@ -30,7 +33,7 @@ public class TournamentSelection implements Selection<Solution> {
 	 */
 	@Override
 	public Solution select(Object... args) {
-		if (args == null || !(args[0] instanceof Integer)) {
+		if (args == null || args.length == 0  || !(args[0] instanceof Integer)) {
 			throw new IllegalArgumentException("Mora biti predan jedan argument: " + "k (Integer)");
 		}
 
