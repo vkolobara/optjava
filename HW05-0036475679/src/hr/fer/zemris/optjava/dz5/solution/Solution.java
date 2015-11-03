@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.solution;
 
 /**
  * Apstraktni razred koji predstavlja jedno rješenje problema.

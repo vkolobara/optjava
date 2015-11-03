@@ -2,12 +2,13 @@ package hr.fer.zemris.optjava.dz5.algorithm;
 
 import java.util.Random;
 
-import hr.fer.zemris.optjava.dz5.BitVectorSolution;
 import hr.fer.zemris.optjava.dz5.GeneticOperators;
-import hr.fer.zemris.optjava.dz5.Solution;
+import hr.fer.zemris.optjava.dz5.population.Population;
 import hr.fer.zemris.optjava.dz5.population.RAPGAPopulation;
 import hr.fer.zemris.optjava.dz5.selection.RandomSelection;
 import hr.fer.zemris.optjava.dz5.selection.TournamentSelection;
+import hr.fer.zemris.optjava.dz5.solution.BitVectorSolution;
+import hr.fer.zemris.optjava.dz5.solution.Solution;
 
 /**
  * Implementacija RAPGA algoritma.
@@ -51,21 +52,28 @@ public class AlgorithmRAPGA implements Algorithm<Solution>{
 	@Override
 	public Solution run() {
 		
-		RAPGAPopulation pop = new RAPGAPopulation(maxPop);
+		Population<BitVectorSolution> pop = new RAPGAPopulation(maxPop);
 		generateRandomPop(pop);
 				
+		int t=0;
 outer:	while (true) {
-			System.out.println(compFactor);
-			System.out.println(pop.population.size());
+	
+			//TODO
+			//ZA OVO MOŽDA TREBA FUNKCIJU NAPRAVITI, ILI ČAK RAZRED KAO 
+			//COMPFACTOR SCHEDULE
+			if (compFactor < 1) {
+				compFactor = Math.max(Math.log(1.0*++t/(10*n)), 0);
+			}
+			
 			TournamentSelection tSel = new TournamentSelection(pop);
 			RandomSelection rSel = new RandomSelection(pop);
 			int limit = (int) (pop.getSize() * maxSelPress);
 			RAPGAPopulation newPop = new RAPGAPopulation(maxPop);
 			
+			BitVectorSolution r1 = (BitVectorSolution) tSel.select(true, k);
+			BitVectorSolution r2 = (BitVectorSolution) rSel.select(true);
 			for (int i=0; i<limit; i++) {
-				BitVectorSolution r1 = (BitVectorSolution) tSel.select(k);
-				BitVectorSolution r2 = (BitVectorSolution) rSel.select();
-				
+
 				BitVectorSolution child = randCrossover(r1, r2);
 				child = GeneticOperators.mutate(child);
 				child.setFitness();
@@ -99,7 +107,7 @@ outer:	while (true) {
 
 	private BitVectorSolution randCrossover(BitVectorSolution r1, BitVectorSolution r2) {
 		
-		int num = rand.nextInt(GeneticOperators.CROSSOVER_NUM);
+		int num = rand.nextInt(GeneticOperators.BIT_CROSSOVER_NUM);
 		
 		BitVectorSolution child;
 		
@@ -121,7 +129,7 @@ outer:	while (true) {
 		
 	}
 
-	private void generateRandomPop(RAPGAPopulation pop) {
+	private void generateRandomPop(Population<BitVectorSolution> pop) {
 		while (!pop.isFull()) {
 			BitVectorSolution sol = new BitVectorSolution(n);
 			sol.randomize();

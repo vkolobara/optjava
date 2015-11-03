@@ -2,8 +2,8 @@ package hr.fer.zemris.optjava.dz5.selection;
 
 import java.util.Random;
 
-import hr.fer.zemris.optjava.dz5.Solution;
 import hr.fer.zemris.optjava.dz5.population.Population;
+import hr.fer.zemris.optjava.dz5.solution.Solution;
 
 
 /**
@@ -19,14 +19,14 @@ public class RandomSelection implements Selection<Solution> {
 	private Population<Solution> population;
 	private Random rand;
 
-	public RandomSelection(Population<Solution> population) {
+	public RandomSelection(Population<? extends Solution> population) {
 		this.population = new Population<>(population.getSize());
 		this.population.population.addAll(population.getPopulation());
 		rand = new Random();
 	}
 	
 	@Override
-	public Solution select(Object... args) {
+	public Solution select(boolean best, Object... args) {
 		return population.getPopulation().get(rand.nextInt(population.population.size()));
 	}
 

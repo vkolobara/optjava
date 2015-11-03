@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.dz5;
+package hr.fer.zemris.optjava.dz5.solution;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -37,7 +37,7 @@ public class BitVectorSolution extends Solution{
 		if (k <= 0.8*n) {
 			fitness = 1.0*k / n;
 		} else if (k > 0.9*n) {
-			fitness = (1.0*2*k/n)-1;
+			fitness = (2.0*k/n)-1;
 		} else {
 			fitness = 0.8;
 		}	
@@ -63,12 +63,12 @@ public class BitVectorSolution extends Solution{
 
 	@Override
 	public int hashCode() {
-		return values.hashCode();
+		return Arrays.hashCode(values);
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		return values.equals(((BitVectorSolution)obj).values);
+		return Arrays.equals(values, ((BitVectorSolution)obj).values);
 	}
 	
 	@Override

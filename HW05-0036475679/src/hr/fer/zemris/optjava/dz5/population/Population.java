@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import hr.fer.zemris.optjava.dz5.Solution;
+import hr.fer.zemris.optjava.dz5.solution.Solution;
 
 /**
  * Predstavlja jednu populaciju rješenja.
@@ -71,7 +71,6 @@ public class Population<T extends Solution> {
 			}
 		}
 		return best;
-		
 	}
 	
 	public List<T> getPopulation() {
@@ -80,6 +79,10 @@ public class Population<T extends Solution> {
 	
 	public int getSize() {
 		return size;
+	}
+	
+	public void setSize(int size) {
+		this.size = size;
 	}
 	
 	
