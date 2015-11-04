@@ -23,7 +23,7 @@ public class Population<T extends Solution> {
 	/**
 	 * Veličina populacije
 	 */
-	private int size;
+	protected int size;
 	
 	public Population(int size) {
 		this.population = new HashSet<>();
@@ -71,6 +71,23 @@ public class Population<T extends Solution> {
 			}
 		}
 		return best;
+	}
+	
+	/**
+	 * 
+	 * @return najlošije rješenje (ili najbolje ako se traži minimizacija)
+	 */
+	public T getWorst() {
+		T worst = null;
+		double worstFit = Double.MAX_VALUE;
+		
+		for (T sol : population) {
+			if (sol.fitness < worstFit) {
+				worst = sol;
+				worstFit = sol.fitness;
+			}
+		}
+		return worst;
 	}
 	
 	public List<T> getPopulation() {

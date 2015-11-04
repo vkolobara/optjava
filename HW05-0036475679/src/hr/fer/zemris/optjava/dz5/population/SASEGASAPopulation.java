@@ -4,15 +4,15 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import hr.fer.zemris.optjava.dz5.algorithm.Algorithm;
 import hr.fer.zemris.optjava.dz5.solution.PermutationSolution;
+import hr.fer.zemris.optjava.dz5.solution.Solution;
 
-public class SASEGASAPopulation {
+public class SASEGASAPopulation extends Population<Solution>{
 
-	private int size;
 	public List<Population<PermutationSolution>> populations;
 
 	public SASEGASAPopulation(int size) {
+		super(size);
 		this.size = size;
 		populations = new LinkedList<>();
 	}
@@ -33,11 +33,6 @@ public class SASEGASAPopulation {
 		populations.remove(index);
 	}
 	
-	public Population<PermutationSolution> executeAlgorithm(Algorithm<PermutationSolution> alg) {
-		alg.run();
-		return null;
-	}
-
 	public void mergePopulations() {
 		if (size == 1) return;
 		

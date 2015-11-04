@@ -39,7 +39,7 @@ public class PermutationSolution extends Solution {
 				sum += GeneticAlgorithm.c[i][j] * GeneticAlgorithm.d[values[i]][values[j]];
 			}
 		}
-		fitness = sum;
+		this.fitness = sum;
 
 	}
 
@@ -63,6 +63,11 @@ public class PermutationSolution extends Solution {
 	@Override
 	public boolean equals(Object obj) {
 		return Arrays.equals(values, ((PermutationSolution)obj).values);
+	}
+	
+	@Override
+	public String toString() {
+		return Arrays.toString(values);
 	}
 
 }

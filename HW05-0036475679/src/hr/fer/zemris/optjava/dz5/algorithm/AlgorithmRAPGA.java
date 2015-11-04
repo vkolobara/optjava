@@ -50,11 +50,10 @@ public class AlgorithmRAPGA implements Algorithm<Solution>{
 
 
 	@Override
-	public Solution run() {
+	public Solution run(Population<Solution> population) {
 		
-		Population<BitVectorSolution> pop = new RAPGAPopulation(maxPop);
-		generateRandomPop(pop);
-				
+		Population<? extends Solution> pop = population;
+						
 		int t=0;
 outer:	while (true) {
 	
@@ -129,13 +128,5 @@ outer:	while (true) {
 		
 	}
 
-	private void generateRandomPop(Population<BitVectorSolution> pop) {
-		while (!pop.isFull()) {
-			BitVectorSolution sol = new BitVectorSolution(n);
-			sol.randomize();
-			sol.setFitness();
-			pop.add(sol);
-		}
-	}
 
 }

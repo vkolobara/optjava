@@ -1,6 +1,10 @@
 package hr.fer.zemris.optjava.dz5;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import hr.fer.zemris.optjava.dz5.solution.BitVectorSolution;
 import hr.fer.zemris.optjava.dz5.solution.PermutationSolution;
@@ -14,7 +18,7 @@ import hr.fer.zemris.optjava.dz5.solution.PermutationSolution;
 public class GeneticOperators {
 
 	public final static int BIT_CROSSOVER_NUM = 4;
-	private final static double MUT_RATE = 0.02;
+	private final static double MUT_RATE = 0.2;
 
 	private static Random rand = new Random();
 
@@ -123,11 +127,38 @@ public class GeneticOperators {
 	 */
 	public static PermutationSolution permCrossover(PermutationSolution r1, PermutationSolution r2) {
 		PermutationSolution child = (PermutationSolution) r1.newLikeThis();
+
+		// TODO izaberi podniz prvog roditelja, ubaci ga na isto mjesto u drugog
+		// i pobriši duple brojeve.
+
+		int maxSubLen = r1.getSize() / 2;
+
+		int subLen = rand.nextInt(maxSubLen);
+		int ind = rand.nextInt(r1.getSize() - subLen);
+
+		List<Integer> subArr = IntStream.of(Arrays.copyOfRange(r1.values, ind, ind + subLen)).boxed()
+				.collect(Collectors.toList());
 		
-		//TODO izaberi podniz prvog roditelja, ubaci ga na isto mjesto u drugog
-		//i pobriši duple brojeve.
-		
-		
+		int i = 0;
+		int j=0;
+		for (; j < ind; i++) {
+			if (subArr.contains(r2.values[i])) {
+				continue;
+			}
+			child.values[j++] = r2.values[i];
+		}
+
+		for (int num : subArr) {
+			child.values[j++] = num;
+		}
+
+		for (; i < r2.values.length; i++) {
+			if (subArr.contains(r2.values[i])) {
+				continue;
+			}
+			child.values[j++] = r2.values[i];
+		}
+
 		return child;
 	}
 
@@ -148,20 +179,27 @@ public class GeneticOperators {
 		}
 		return mutation;
 	}
-	
+
+	/**
+	 * Mutira permutaciju tako što mijenja mjesta 2 random indeksa.
+	 * 
+	 * @param child
+	 *            dijete za mutaciju
+	 * @return mutirano dijete
+	 */
 	public static PermutationSolution mutate(PermutationSolution child) {
-		
-		for (int i=0; i<child.values.length; i++) {
+
+		for (int i = 0; i < child.values.length; i++) {
 			if (rand.nextDouble() <= MUT_RATE) {
 				int ind = rand.nextInt(child.values.length);
 				int temp = child.values[i];
 				child.values[i] = child.values[ind];
 				child.values[ind] = temp;
-			}	
+			}
 		}
-		
+
 		return child;
-		
+
 	}
 
 }

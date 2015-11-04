@@ -21,14 +21,27 @@ public class AlgorithmSASEGASA implements Algorithm<Solution> {
 	private int popNumber;
 	private int n;
 
+	private double succRatio;
+	private double compFactor;
+	private double maxSelPress;
+
 	/**
 	 * 
 	 * @param solNumber
-	 *            broj jedinki
+	 *            broj rješenja
 	 * @param popNumber
 	 *            broj podpopulacija
+	 * @param n
+	 *            duljina rješenja
+	 * @param succRatio
+	 *            faktor uspješnosti
+	 * @param compFactor
+	 *            faktor usporedbe
+	 * @param maxSelPress
+	 *            maksimalni selekcijski pritisak
 	 */
-	public AlgorithmSASEGASA(int solNumber, int popNumber, int n) {
+	public AlgorithmSASEGASA(int solNumber, int popNumber, int n, double succRatio, double compFactor,
+			double maxSelPress) {
 		if (solNumber < popNumber) {
 			throw new IllegalArgumentException("Broj rješenja mora biti veći ili jednak broju populacija!");
 		}
@@ -36,77 +49,55 @@ public class AlgorithmSASEGASA implements Algorithm<Solution> {
 		this.solNumber = solNumber;
 		this.popNumber = popNumber;
 		this.n = n;
+		this.succRatio = succRatio;
+		this.compFactor = compFactor;
+		this.maxSelPress = maxSelPress;
 	}
 
 	@Override
-	public Solution run() {
+	public Solution run(Population<Solution> population) {
 
-		SASEGASAPopulation pop = new SASEGASAPopulation(popNumber);
-
-		int size = solNumber / popNumber;
-		int rem = solNumber % popNumber;
-		while (!pop.isFull()) {
-			pop.addPopulation(generateRandomPop(size));
-		}
-
-		if (rem != 0) {
-			pop.remove(pop.getSize()-1);
-			pop.addPopulation(generateRandomPop(rem));
-		}
+		SASEGASAPopulation pop = (SASEGASAPopulation) population;
 
 		while (pop.getSize() > 1) {
 			try {
 				parallelize(pop);
 				pop.mergePopulations();
+				System.out.println("Trenutni broj podpopulacija: " + pop.getSize());
+
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-
 		}
 
-		return pop.populations.get(0).getBest();
+		AlgorithmOS alg = new AlgorithmOS(succRatio, maxSelPress, compFactor);
+
+		return alg.run(pop.populations.get(0));
 
 	}
 
 	/**
 	 * Izvodi paralelno algoritam Offspring selection za svaku podpopulaciju
-	 * @param pop vršna populacija
-	 * @throws InterruptedException 
+	 * 
+	 * @param pop
+	 *            vršna populacija
+	 * @throws InterruptedException
 	 */
 	private void parallelize(SASEGASAPopulation pop) throws InterruptedException {
 
 		ExecutorService executor = Executors.newFixedThreadPool(pop.getSize());
-	    for (final Population<PermutationSolution> popul : pop.populations) {
-	      Runnable worker = new Runnable() {
-			@Override
-			public void run() {
-				AlgorithmOS alg = new AlgorithmOS(popul, 0.4, 5, 0.5);
-				alg.run();
-			}
-		};
-	      executor.execute(worker);
-	    }
-	    executor.shutdown();
-	    executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-		
-	}
-
-	/**
-	 * Generira nasumičnu populaciju veličine <i>size</i>
-	 * @param size veličina populacije koja se generira
-	 * @return novonastalu populaciju
-	 */
-	private Population<PermutationSolution> generateRandomPop(int size) {
-		Population<PermutationSolution> pop = new Population<>(size);
-
-		while (!pop.isFull()) {
-			PermutationSolution sol = new PermutationSolution(n);
-			sol.randomize();
-			pop.add(sol);
+		for (final Population<PermutationSolution> popul : pop.populations) {
+			Runnable worker = new Runnable() {
+				@Override
+				public void run() {
+					AlgorithmOS alg = new AlgorithmOS(succRatio, maxSelPress, compFactor);
+					alg.run(popul);
+				}
+			};
+			executor.execute(worker);
 		}
-
-		return pop;
+		executor.shutdown();
+		executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 
 	}
 
