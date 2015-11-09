@@ -19,9 +19,19 @@ public class GeneticAlgorithm {
 		int maxPop = 200;
 		double maxSelPress = 10;
 		double compFactor = 0;
-		int n = 10;
+		int n = 1000;
 		int k = 4;
 		
+		if (args.length != 1) {
+			throw new IllegalArgumentException("Potreban 1 argument: n!");
+		}
+		
+		try {
+			n = Integer.parseInt(args[0]);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Argument mora biti cijeli broj!");
+		}
+		 
 		AlgorithmRAPGA alg = new AlgorithmRAPGA(minPop, maxPop, maxSelPress, compFactor, n, k);
 		Solution sol = alg.run(generateRandomPop(minPop, n));
 		System.out.println(sol + "\n" + sol.fitness);

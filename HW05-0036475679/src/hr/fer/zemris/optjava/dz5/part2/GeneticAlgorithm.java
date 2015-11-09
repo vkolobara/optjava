@@ -15,6 +15,13 @@ import hr.fer.zemris.optjava.dz5.solution.Solution;
  * Razred koji pokreće rješavanje QAP. Pojedina podpopulacija se vrti Offspring
  * Selection-om (paralelizirano).
  * 
+ * Potrebni argumenti komandne linije: 
+ * <ul>
+ * <li>Putanja do datoteke</li>
+ * <li>Ukupan broj jedinki</li>
+ * <li>Broj podpopulacija</li>
+ * </ul>
+ * 
  * Optimalna rješenja:
  * <table>
  * <tr>
@@ -29,7 +36,6 @@ import hr.fer.zemris.optjava.dz5.solution.Solution;
  * <td>els19.dat</td>
  * <td>->17 212 548</td>
  * </tr>
- * 
  * </table>
  * 
  * 
@@ -44,15 +50,20 @@ public class GeneticAlgorithm {
 
 	public static void main(String[] args) {
 		try {
-			readFile("./data/nug12.dat");
-			int solNumber = 250;
-			int popNumber = 20;
-			double succRatio = 0.35;
+			int solNumber = 150;
+			int popNumber = 10;
+			double succRatio = 0.40;
 			double compFactor = 0;
 			double maxSelPress = 10;
 
 			SASEGASAPopulation pop = new SASEGASAPopulation(popNumber);
 
+			
+			readFile(args[0]);
+			solNumber = Integer.parseInt(args[1]);
+			popNumber = Integer.parseInt(args[2]);
+
+			
 			int size = solNumber / popNumber;
 			int rem = solNumber % popNumber;
 			while (!pop.isFull()) {
@@ -67,10 +78,10 @@ public class GeneticAlgorithm {
 			AlgorithmSASEGASA alg = new AlgorithmSASEGASA(solNumber, popNumber, n, succRatio, compFactor, maxSelPress);
 			Solution sol = alg.run(pop);
 
-			System.out.println(sol + " Fitness: " + sol.fitness);
+			System.out.println(sol + " Error: " + sol.fitness);
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException("Neispravni argumenti komandne linije!");
 		}
 	}
 

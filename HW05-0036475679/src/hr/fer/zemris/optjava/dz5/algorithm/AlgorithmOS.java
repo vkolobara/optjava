@@ -33,12 +33,6 @@ public class AlgorithmOS implements Algorithm<PermutationSolution> {
 		double succNum = velPop * succRatio;
 		int t = 0;
 		while (true) {
-			// TODO
-			// ZA OVO MOŽDA TREBA FUNKCIJU NAPRAVITI, ILI ČAK RAZRED KAO
-			// COMPFACTOR SCHEDULE
-			if (compFactor < 1) {
-				compFactor = Math.max(Math.log(1.0 * ++t / (10 * velPop)), 0);
-			}
 
 			TournamentSelection tournSel = new TournamentSelection(pop);
 			RandomSelection randomSel = new RandomSelection(pop);
@@ -48,11 +42,11 @@ public class AlgorithmOS implements Algorithm<PermutationSolution> {
 			Population<PermutationSolution> newPop = new Population<>(velPop);
 
 			int counter = 0;
-			PermutationSolution r1 = (PermutationSolution) tournSel.select(false, 3);
-			PermutationSolution r2 = (PermutationSolution) randomSel.select(false);
-
-			for (int i = 0; i < limit; i++) {
-
+			
+			int i;
+			for (i=0; counter < succNum && i < limit; i++) {
+				PermutationSolution r1 = (PermutationSolution) tournSel.select(false, 3);
+				PermutationSolution r2 = (PermutationSolution) randomSel.select(false);
 				PermutationSolution child = GeneticOperators.permCrossover(r1, r2);
 				child = GeneticOperators.mutate(child);
 				child.setFitness();
@@ -65,24 +59,27 @@ public class AlgorithmOS implements Algorithm<PermutationSolution> {
 					}
 				} else {
 					pool.add(child);
-				}
-
+				}			
 			}
-
-			if (counter < succNum)
-				break;
-
-			int i = 0;
+						
+			int j = 0;
 			int poolSize = pool.size();
 			List<PermutationSolution> poolList = new LinkedList<>(pool);
-			while (!newPop.isFull() && i < poolSize) {
-				newPop.add(poolList.get(i++));
+			while (!newPop.isFull() && j < poolSize) {
+				newPop.add(poolList.get(j++));
 			}
 
 			if (!newPop.isFull())
 				break;
 
 			pop = newPop;
+
+			if (i==limit) break;
+			
+			if (compFactor < 1) {
+				compFactor = Math.max(Math.log(1.0 * t / (1000 * velPop)), 0);
+			}
+
 		}
 
 		return pop.getWorst();

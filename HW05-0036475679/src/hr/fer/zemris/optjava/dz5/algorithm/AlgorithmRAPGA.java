@@ -56,10 +56,7 @@ public class AlgorithmRAPGA implements Algorithm<Solution>{
 						
 		int t=0;
 outer:	while (true) {
-	
-			//TODO
-			//ZA OVO MOŽDA TREBA FUNKCIJU NAPRAVITI, ILI ČAK RAZRED KAO 
-			//COMPFACTOR SCHEDULE
+
 			if (compFactor < 1) {
 				compFactor = Math.max(Math.log(1.0*++t/(10*n)), 0);
 			}
@@ -69,10 +66,10 @@ outer:	while (true) {
 			int limit = (int) (pop.getSize() * maxSelPress);
 			RAPGAPopulation newPop = new RAPGAPopulation(maxPop);
 			
-			BitVectorSolution r1 = (BitVectorSolution) tSel.select(true, k);
-			BitVectorSolution r2 = (BitVectorSolution) rSel.select(true);
-			for (int i=0; i<limit; i++) {
-
+			int i;
+			for (i=0; i<limit; i++) {
+				BitVectorSolution r1 = (BitVectorSolution) tSel.select(true, k);
+				BitVectorSolution r2 = (BitVectorSolution) rSel.select(true);
 				BitVectorSolution child = randCrossover(r1, r2);
 				child = GeneticOperators.mutate(child);
 				child.setFitness();
@@ -87,10 +84,11 @@ outer:	while (true) {
 				}
 			
 			}	
-			
+
 			if (newPop.population.size() < minPop){
 				break;
-			} else {
+			}
+			else {
 				pop = newPop;
 			}
 		}

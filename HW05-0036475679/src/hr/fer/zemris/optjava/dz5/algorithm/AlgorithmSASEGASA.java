@@ -63,8 +63,6 @@ public class AlgorithmSASEGASA implements Algorithm<Solution> {
 			try {
 				parallelize(pop);
 				pop.mergePopulations();
-				System.out.println("Trenutni broj podpopulacija: " + pop.getSize());
-
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
