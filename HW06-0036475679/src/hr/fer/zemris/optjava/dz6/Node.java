@@ -13,12 +13,31 @@ public class Node {
 		candidateList = new LinkedList<>();
 	}
 	
+	public void addCandidate(Node node) {
+		candidateList.add(node);
+	}
+	
 	public int getIndex() {
 		return index;
 	}
 	
 	public List<Node> getCandidateList() {
-		return candidateList;
+		return new LinkedList<>(candidateList);
+	}
+	
+	@Override
+	public String toString() {
+		return ""+index;
+	}
+	
+	@Override
+	public int hashCode() {
+		return Integer.hashCode(index);
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return index == ((Node) obj).index;
 	}
 	
 
