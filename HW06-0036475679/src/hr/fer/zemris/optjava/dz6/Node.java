@@ -6,15 +6,21 @@ import java.util.List;
 public class Node {
 	
 	private List<Node> candidateList;
+	private List<Node> neighborList;
 	private int index;
 	
 	public Node(int index) {
 		this.index = index;
 		candidateList = new LinkedList<>();
+		neighborList = new LinkedList<>();
 	}
 	
 	public void addCandidate(Node node) {
 		candidateList.add(node);
+	}
+	
+	public void addNeighbor(Node node) {
+		neighborList.add(node);
 	}
 	
 	public int getIndex() {
@@ -23,6 +29,10 @@ public class Node {
 	
 	public List<Node> getCandidateList() {
 		return new LinkedList<>(candidateList);
+	}
+	
+	public List<Node> getNeighborList() {
+		return new LinkedList<>(neighborList);
 	}
 	
 	@Override

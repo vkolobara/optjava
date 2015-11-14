@@ -3,15 +3,11 @@ package hr.fer.zemris.optjava.dz6;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Random;
 
 /**
  * Created by Vinko on 09.11.2015.
@@ -30,26 +26,30 @@ public class Test {
 		String path;
 
 		alpha = 1;
-		beta = 2;
-		a = 100;
-		path = "TSP/bays29.tsp";
-		maxIter = 150;
-		l = 30;
-		tMax = 0.001;
-		tMin = 0;
-		ro = 0.02;
-
+		beta = 3;
+		path = "TSP/pr76.tsp";
+		
 		readFile(path, beta);
-		k = n;
+
+		a = 10;
+		maxIter = 300;
+		l = 30;
+		ro = 0.02;
+		k = 4;
 
 		List<Node> nodes = fillCandidateList(k);
+		tMax = 1.0 / (ro * GreedyAlgorithm.run(nodes, distanceMatrix));
+		tMin = tMax/a;
 
 		Graph graph = new Graph(nodes, distanceMatrix, heuristicMatrix, generatePheromoneMap(tMax), n, alpha, ro, tMin,
 				tMax);
+		
 
 		AntAlgorithm alg = new AntAlgorithm(maxIter, graph, l);
 
-		System.out.println(alg.run().distance);
+		Ant solution = alg.run();
+		solution.setFirstTown();
+		System.out.println(solution.visited + "\nDuljina: " + solution.distance);
 
 	}
 
@@ -87,8 +87,13 @@ public class Test {
 
 			int size = candidates.size();
 
-			for (int j = 0; j < k && j < size; j++) {
+			int j;
+			for (j = 0; j < k && j < size; j++) {
 				node.addCandidate(candidates.get(j));
+				node.addNeighbor(candidates.get(j));
+			}
+			for (; j<size; j++) {
+				node.addNeighbor(candidates.get(j));
 			}
 
 			nodeList.add(node);
@@ -127,7 +132,7 @@ public class Test {
 	}
 
 	private static void readMatrix(List<String> rows, double beta) {
-		int i = 0, j;
+		int i = 0, j = 0;
 		for (String row : rows) {
 			if (row.matches("^[a-zA-Z].*$"))
 				break;
@@ -137,8 +142,8 @@ public class Test {
 
 			for (String el : split) {
 				double num = Double.parseDouble(el);
-				heuristicMatrix[i][j] = Math.pow(1.0 / num, beta);
-				distanceMatrix[i][j++] = num;
+				heuristicMatrix[i%n][j%n] = Math.pow(1.0 / num, beta) + 0.1;
+				distanceMatrix[i%n][j++%n] = num;
 			}
 
 			i++;
@@ -149,6 +154,7 @@ public class Test {
 	private static void readNodes(List<String> rows, double beta) {
 		List<Point> nodes = new LinkedList<>();
 		for (String row : rows) {
+
 			if (row.matches("^[a-zA-Z].*$"))
 				break;
 
@@ -167,7 +173,7 @@ public class Test {
 			for (int j = 0; j < n; j++) {
 				double num = nodes.get(i).distance(nodes.get(j));
 				heuristicMatrix[i][j] = Math.pow(1.0 / num, beta);
-				distanceMatrix[i][j++] = num;
+				distanceMatrix[i][j] = num;
 			}
 		}
 	}

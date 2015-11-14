@@ -1,5 +1,6 @@
 package hr.fer.zemris.optjava.dz6;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -23,11 +24,21 @@ public class Ant extends Solution {
 	public Node getVisited(int i) {
 		return visited.get(i);
 	}
-
+	
+	public void setFirstTown() {
+		while(visited.get(0).getIndex() != 0) {
+			Collections.rotate(visited, 1);
+		}
+	}
+	
 	public void move() {
 
 		List<Node> candidates = current.getCandidateList();
 		candidates.removeAll(visited);
+		if (candidates.isEmpty()) {
+			candidates.addAll(current.getNeighborList());
+			candidates.removeAll(visited);
+		}
 		List<Range> ranges = new LinkedList<>();
 
 		double sum = 0;
@@ -52,8 +63,9 @@ public class Ant extends Solution {
 
 		i = 0;
 		for (Range range : ranges) {
-			if (range.isInRange(pVal))
+			if (range.isInRange(pVal)){
 				break;
+			}
 			i++;
 		}
 		Node next = graph.getNodes().get(candidates.get(i).getIndex());

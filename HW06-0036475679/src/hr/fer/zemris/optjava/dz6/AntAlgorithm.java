@@ -1,6 +1,5 @@
 package hr.fer.zemris.optjava.dz6;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class AntAlgorithm {
@@ -26,8 +25,6 @@ public class AntAlgorithm {
 			for (Ant ant : pop.population) {
 				ant.clear();
 			}
-			System.out.println(Arrays.deepToString(graph.pheromoneMatrix));
-
 			Ant bestIter = null;
 			
 			for (Ant ant : pop.getPopulation()) {
@@ -45,7 +42,8 @@ public class AntAlgorithm {
 				
 			}			
 			graph.evaporate();
-			graph.pheromoneTrail(bestIter);
+			graph.pheromoneTrail(bestSoFar);
+			
 		}
 		
 				
