@@ -1,6 +1,5 @@
 package hr.fer.zemris.optjava.dz6;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class Graph {
@@ -42,6 +41,14 @@ public class Graph {
 			for (int j=0; j<n; j++) {
 				pheromoneMatrix[i][j] *= (1-ro);
 				pheromoneMatrix[i][j] = Math.max(pheromoneMatrix[i][j], tMin);
+			}
+		}
+	}
+	
+	public void resetPheromones() {
+		for (int i=0; i<n; i++) {
+			for (int j=0; j<n; j++) {
+				pheromoneMatrix[i][j] = tMax;
 			}
 		}
 	}

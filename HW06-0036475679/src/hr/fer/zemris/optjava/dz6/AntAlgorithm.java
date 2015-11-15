@@ -20,6 +20,8 @@ public class AntAlgorithm {
 		Ant bestSoFar = null;
 		Population<Ant> pop = fillPopulation(size, graph);
 
+		int counter = 0;
+		int switchPoint = 2*maxIter/5;
 		
 		for (int t=0; t<maxIter; t++) {
 			for (Ant ant : pop.population) {
@@ -32,17 +34,27 @@ public class AntAlgorithm {
 					ant.move();
 				}
 				ant.setFitness();
-				
+				counter++;
 				if (bestSoFar == null || ant.fitness > bestSoFar.fitness) {
+					counter = 0;
 					bestSoFar = ant;
 					bestIter = ant;
 				} else if (bestIter == null || ant.fitness > bestIter.fitness) {
 					bestIter = ant;
 				}
 				
+				if (counter == 100) {
+					counter = 0;
+					graph.resetPheromones();
+				}
+				
 			}			
 			graph.evaporate();
-			graph.pheromoneTrail(bestSoFar);
+			if (t < switchPoint) {
+				graph.pheromoneTrail(bestIter);
+			} else {
+				graph.pheromoneTrail(bestSoFar);
+			}
 			
 		}
 		

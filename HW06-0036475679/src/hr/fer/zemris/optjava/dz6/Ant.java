@@ -31,6 +31,9 @@ public class Ant extends Solution {
 		}
 	}
 	
+	/**
+	 * Kretanje mrava kroz graf.
+	 */
 	public void move() {
 
 		List<Node> candidates = current.getCandidateList();

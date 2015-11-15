@@ -10,15 +10,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Vinko on 09.11.2015.
+ * 
  */
-public class Test {
+public class TSPSolver {
 
 	private static double[][] heuristicMatrix;
 	private static double[][] distanceMatrix;
 	private static int n;
 
 	public static void main(String[] args) throws IOException {
+
+		if (args.length != 4) {
+			throw new IllegalArgumentException("Potrebna 4 argumenta!");
+		}
 
 		double tMin, tMax;
 		double alpha, beta, ro;
@@ -27,23 +31,26 @@ public class Test {
 
 		alpha = 1;
 		beta = 3;
-		path = "TSP/pr76.tsp";
-		
-		readFile(path, beta);
 
-		a = 10;
-		maxIter = 300;
-		l = 30;
-		ro = 0.02;
-		k = 4;
+		try {
+			path = args[0];
+			k = Integer.parseInt(args[1]);
+			l = Integer.parseInt(args[2]);
+			maxIter = Integer.parseInt(args[3]);
+		} catch (Exception e) {
+			throw new IllegalArgumentException("Pogrešni argumenti!");
+		}
+
+		readFile(path, beta);
+		ro = 0.05;
 
 		List<Node> nodes = fillCandidateList(k);
+		a = nodes.size() > 100 ? 100 : 10;
 		tMax = 1.0 / (ro * GreedyAlgorithm.run(nodes, distanceMatrix));
-		tMin = tMax/a;
+		tMin = tMax / a;
 
 		Graph graph = new Graph(nodes, distanceMatrix, heuristicMatrix, generatePheromoneMap(tMax), n, alpha, ro, tMin,
 				tMax);
-		
 
 		AntAlgorithm alg = new AntAlgorithm(maxIter, graph, l);
 
@@ -92,7 +99,7 @@ public class Test {
 				node.addCandidate(candidates.get(j));
 				node.addNeighbor(candidates.get(j));
 			}
-			for (; j<size; j++) {
+			for (; j < size; j++) {
 				node.addNeighbor(candidates.get(j));
 			}
 
@@ -142,8 +149,8 @@ public class Test {
 
 			for (String el : split) {
 				double num = Double.parseDouble(el);
-				heuristicMatrix[i%n][j%n] = Math.pow(1.0 / num, beta) + 0.1;
-				distanceMatrix[i%n][j++%n] = num;
+				heuristicMatrix[i % n][j % n] = Math.pow(1.0 / num, beta) + 0.1;
+				distanceMatrix[i % n][j++ % n] = num;
 			}
 
 			i++;
