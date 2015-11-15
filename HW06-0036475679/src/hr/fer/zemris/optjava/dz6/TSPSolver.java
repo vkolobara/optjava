@@ -21,7 +21,8 @@ public class TSPSolver {
 	public static void main(String[] args) throws IOException {
 
 		if (args.length != 4) {
-			throw new IllegalArgumentException("Potrebna 4 argumenta!");
+			System.err.println("Potrebna 4 argumenta!");
+			return;
 		}
 
 		double tMin, tMax;
@@ -31,18 +32,20 @@ public class TSPSolver {
 
 		alpha = 1;
 		beta = 3;
+		ro = 0.05;
 
+		
 		try {
 			path = args[0];
 			k = Integer.parseInt(args[1]);
 			l = Integer.parseInt(args[2]);
 			maxIter = Integer.parseInt(args[3]);
 		} catch (Exception e) {
-			throw new IllegalArgumentException("Pogrešni argumenti!");
+			System.err.println("Pogrešni argumenti!");
+			return;		
 		}
 
 		readFile(path, beta);
-		ro = 0.05;
 
 		List<Node> nodes = fillCandidateList(k);
 		a = nodes.size() > 100 ? 100 : 10;
