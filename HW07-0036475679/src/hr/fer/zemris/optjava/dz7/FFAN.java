@@ -1,8 +1,6 @@
 package hr.fer.zemris.optjava.dz7;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.DoubleStream;
 
 public class FFAN {
 
@@ -27,7 +25,7 @@ public class FFAN {
 		this.layerFunctions = new ITransferFunction[layerFunctions.length];
 		System.arraycopy(layerFunctions, 0, this.layerFunctions, 0, layerFunctions.length);
 		for (int i = 1; i < layers.length; i++) {
-			weightsCount += layers[i] * layers[i - 1];
+			weightsCount += layers[i] * layers[i - 1] + layers[i];
 		}
 	}
 
@@ -60,6 +58,15 @@ public class FFAN {
 		System.arraycopy(prevNet, 0, outputs, 0, outputs.length);
 	}
 	
+	public IReadOnlyDataset getDataset() {
+		return dataset;
+	}
+	
+	/**
+	 * 
+	 * @param outputs izračunati izlazi
+	 * @return vraća srednje kvadratno odstupanje od stvarnih izlaza.
+	 */
 	public double error(List<double[]> outputs) {
 		int n = dataset.numberOfSamples();
 		double sum=0;

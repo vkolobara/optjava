@@ -3,48 +3,82 @@ package hr.fer.zemris.optjava.dz7;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Main {
 
-	
 	public static void main(String[] args) {
-		
+
 		try {
 			IReadOnlyDataset dataset = loadData("07-iris-formatirano.data");
-			
-			FFAN ffan = new FFAN(new int[] {
-					4, 3, 3
-			}, new ITransferFunction[] {
-					new SigmoidTransferFunction(),
-					new SigmoidTransferFunction(),
-					new SigmoidTransferFunction()
-			}, dataset);
-			
+
+			FFAN ffan = new FFAN(new int[] { 4, 5, 3, 3 }, new ITransferFunction[] { new SigmoidTransferFunction(),
+					new SigmoidTransferFunction(), new SigmoidTransferFunction() }, dataset);
+
+			double xMaxVal = 1;
+			double xMinVal = -1;
+			double vMaxVal = Math.abs(xMaxVal - xMinVal);
+			double vMinVal = -vMaxVal;
+			int popSize = 60;
+			int neighborSize = 20;
+			int d = ffan.getWeightsCount();
+			double c1 = 2;
+			double c2 = 2;
+			double wMax = 0.9;
+			double wMin = 0.4;
+			double merr = 0.05;
+			int maxIter = 500;
+			int wTMax = 500;
+
+			double[] xMax = new double[d];
+			double[] xMin = new double[d];
+			double[] vMax = new double[d];
+			double[] vMin = new double[d];
+
+			for (int i = 0; i < d; i++) {
+				xMax[i] = xMaxVal;
+				xMin[i] = xMinVal;
+				vMax[i] = vMaxVal;
+				vMin[i] = vMinVal;
+			}
+
+			PSOAlgorithm alg = new PSOAlgorithm(ffan, popSize, neighborSize, d, c1, c2, xMax, xMin, vMax, vMin, wMax,
+					wMin, wTMax, merr, maxIter);
+
+			Particle solution = alg.run();
+
 			List<double[]> outputs = new LinkedList<>();
-			double[] weights = new double[27];
-			for (int i=0; i<27; i++) {
-				weights[i] = -0.2;
+			for (double[] inputs : dataset.getInputs()) {
+				double[] output = new double[3];
+				ffan.calcOutputs(inputs, solution.x, output);
+				outputs.add(output);
+			}
+
+			int size = dataset.numberOfSamples();
+			for (int i = 0; i < size; i++) {
+				System.out.println("Ulaz: " + Arrays.toString(dataset.getInputs().get(i)));
+				System.out.println("Očekivani izlaz: " + Arrays.toString(dataset.getOutputs().get(i)));
+				System.out.println("Dobiveni izlaz: " + pretvoriUBin(outputs.get(i)));
+				System.out.println();
 			}
 			
-			dataset.getInputs().forEach(input -> {
-				double[] vals = new double[3];
-				ffan.calcOutputs(input, weights, vals);
-				outputs.add(vals);
-			});
-			
-			System.out.println(ffan.error(outputs));
-			
+			System.out.println("Srednje kvadratno odstupanje: " + ffan.error(outputs));
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
-	private static IReadOnlyDataset loadData(String path) throws IOException {		
-		List<double[]> inputs=new LinkedList<>(), outputs = new LinkedList<>();
-		int numberOfSamples = 0;;
+
+	private static String pretvoriUBin(double[] ds) {
+		return "[" + (ds[0] >= 0.5 ? 1.0 : 0.0) + ", " + (ds[1] >= 0.5 ? 1.0 : 0.0) + ", " + (ds[2] >= 0.5 ? 1.0 : 0.0) + "]";
+	}
+
+	private static IReadOnlyDataset loadData(String path) throws IOException {
+		List<double[]> inputs = new LinkedList<>(), outputs = new LinkedList<>();
+		int numberOfSamples = 0;
 		for (String row : Files.readAllLines(Paths.get(path))) {
 			String[] inputOutput = row.replaceAll("[()]", "").split(":");
 			String[] inputString = inputOutput[0].split(",");
@@ -52,20 +86,19 @@ public class Main {
 
 			double[] inputArray = new double[inputString.length];
 			double[] outputArray = new double[outputString.length];
-			
-			
-			for (int i=0; i<inputString.length; i++) {
+
+			for (int i = 0; i < inputString.length; i++) {
 				inputArray[i] = Double.parseDouble(inputString[i]);
 			}
-			for (int i=0; i<outputString.length; i++) {
+			for (int i = 0; i < outputString.length; i++) {
 				outputArray[i] = Double.parseDouble(outputString[i]);
 			}
-		
+
 			inputs.add(inputArray);
 			outputs.add(outputArray);
 			numberOfSamples++;
 		}
-		
+
 		return new IReadOnlyDataset(inputs, outputs, numberOfSamples);
 	}
 }
