@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.dz7;
+package hr.fer.zemris.optjava.dz7.part1;
 
 public class SigmoidTransferFunction implements ITransferFunction{
 

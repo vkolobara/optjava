@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.dz7;
+package hr.fer.zemris.optjava.dz7.part1;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -65,7 +65,7 @@ public class PSOAlgorithm {
 
 			System.out.println("Generacija: " + (t+1) + ", Najbolje rješenje: " + population.getBest().fitness);
 
-			if (population.getBest().fitness < merr || t>=maxIter) {
+			if (population.getBest().fitness < merr || t >= maxIter-1) {
 				break;
 			}
 
