@@ -13,7 +13,7 @@ import hr.fer.zemris.optjava.dz7.part1.ITransferFunction;
 import hr.fer.zemris.optjava.dz7.part1.PSOAlgorithm;
 import hr.fer.zemris.optjava.dz7.part1.Particle;
 import hr.fer.zemris.optjava.dz7.part1.SigmoidTransferFunction;
-import hr.fer.zemris.optjava.dz7.part2.BitvectorSolution;
+import hr.fer.zemris.optjava.dz7.part2.DoubleArraySolution;
 import hr.fer.zemris.optjava.dz7.part2.ClonAlg;
 
 public class Main {
@@ -28,7 +28,7 @@ public class Main {
 			
 			runClonAlg(ffan);
 
-			runPSO(ffan);
+//			runPSO(ffan, 20);
 
 			
 
@@ -38,13 +38,12 @@ public class Main {
 
 	}
 
-	private static void runPSO(FFAN ffan) {
+	private static void runPSO(FFAN ffan, int neighborSize) {
 		double xMaxVal = 1;
 		double xMinVal = -1;
 		double vMaxVal = 2*Math.abs(xMaxVal - xMinVal);
 		double vMinVal = -vMaxVal;
 		int popSize = 60;
-		int neighborSize = 20;
 		int d = ffan.getWeightsCount();
 		double c1 = 2;
 		double c2 = 2;
@@ -86,7 +85,7 @@ public class Main {
 			System.out.println("Dobiveni izlaz: " + pretvoriUBin(outputs.get(i)));
 			System.out.println();
 		}
-		
+		System.out.println(Arrays.toString(solution.x));
 		System.out.println("Srednje kvadratno odstupanje: " + ffan.error(outputs));
 	}
 
@@ -97,19 +96,36 @@ public class Main {
 	private static void runClonAlg(FFAN ffan) {
 		
 		double max = 100;
-		double min = 100;
+		double min = -100;
 		int dim = ffan.getWeightsCount();
-		int len = 10;
 		int maxIter = 500;
-		int N = 50;
+		int N = 100;
 		int d = 10;
-		int n = 25;
-		double beta = 0.5;
-		double ro = 0.03;
+		int n = 20;
+		double beta = 1;
+		double ro = 2.5;
+		double sigma = 3;
 		
+		ClonAlg alg = new ClonAlg(max, min, dim, maxIter, N, d, n, beta, ro, ffan, sigma);
+		DoubleArraySolution solution = alg.run();
+		IReadOnlyDataset dataset = ffan.getDataset();
 		
-		ClonAlg alg = new ClonAlg(max, min, dim, len, maxIter, N, d, n, beta, ro, ffan);
-		alg.run();
+		List<double[]> outputs = new LinkedList<>();
+		for (double[] inputs : dataset.getInputs()) {
+			double[] output = new double[3];
+			ffan.calcOutputs(inputs, solution.solution, output);
+			outputs.add(output);
+		}
+		
+		int size = dataset.numberOfSamples();
+		for (int i = 0; i < size; i++) {
+			System.out.println("Ulaz: " + Arrays.toString(dataset.getInputs().get(i)));
+			System.out.println("Očekivani izlaz: " + Arrays.toString(dataset.getOutputs().get(i)));
+			System.out.println("Dobiveni izlaz: " + pretvoriUBin(outputs.get(i)));
+			System.out.println();
+		}
+		System.out.println(Arrays.toString(solution.solution));
+		System.out.println("Srednje kvadratno odstupanje: " + ffan.error(outputs));
 		
 	}
 
