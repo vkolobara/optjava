@@ -1,6 +1,5 @@
 package hr.fer.zemris.optjava.dz7.part2;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,6 +9,7 @@ import hr.fer.zemris.optjava.dz7.part1.FFAN;
 
 public class ClonAlg {
 
+	private double merr;
 	private double max, min;
 	private int dim;
 	private int maxIter;
@@ -28,6 +28,7 @@ public class ClonAlg {
 	 *            maksimalna vrijednost x-a
 	 * @param min
 	 *            minimalna vrijednost x-a
+	 * @param min 
 	 * @param dim
 	 *            dimenzija vektora rješenja
 	 * @param maxIter
@@ -42,8 +43,9 @@ public class ClonAlg {
 	 * @param ro
 	 * @param ffan
 	 */
-	public ClonAlg(double max, double min, int dim, int maxIter, int N, int d, int n, double beta, double ro,
+	public ClonAlg(double merr, double max, double min, int dim, int maxIter, int N, int d, int n, double beta, double ro,
 			FFAN ffan, double sigma) {
+		this.merr = merr;
 		this.max = max;
 		this.min = min;
 		this.dim = dim;
@@ -71,7 +73,7 @@ public class ClonAlg {
 		while (t++ < maxIter) {
 			System.out.println("Generacija: " + t);
 			pop.population.forEach(sol -> sol.fitness = evaluateSolution(sol, sampleNumber, outputLen, inputs)); // evaluacija
-			System.out.println(pop.getBest().fitness);
+			if (pop.getBest().fitness <= merr) break;
 			
 			Population popSel = select(pop);
 			Population popClo = clone(popSel);

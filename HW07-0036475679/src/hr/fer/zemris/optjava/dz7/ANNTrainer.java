@@ -16,41 +16,47 @@ import hr.fer.zemris.optjava.dz7.part1.SigmoidTransferFunction;
 import hr.fer.zemris.optjava.dz7.part2.DoubleArraySolution;
 import hr.fer.zemris.optjava.dz7.part2.ClonAlg;
 
-public class Main {
+public class ANNTrainer {
 
 	public static void main(String[] args) {
 
 		try {
-			IReadOnlyDataset dataset = loadData("07-iris-formatirano.data");
+			IReadOnlyDataset dataset = loadData(args[0]);
+			String algName = args[1];
 
 			FFAN ffan = new FFAN(new int[] { 4, 5, 3, 3 }, new ITransferFunction[] { new SigmoidTransferFunction(),
 					new SigmoidTransferFunction(), new SigmoidTransferFunction() }, dataset);
-			
-			runClonAlg(ffan);
 
-//			runPSO(ffan, 20);
+			int n = Integer.parseInt(args[2]);
+			double merr = Double.parseDouble(args[3]);
+			int maxIter = Integer.parseInt(args[4]);
 
-			
+			if (algName.equals("clonalg")) {
+				runClonAlg(ffan, n, maxIter, merr);
+			} else if (algName.startsWith("pso-a")) {
+				runPSO(ffan, 0,  n, merr, maxIter);
+			} else if (algName.startsWith("pso-b")) {
+				runPSO(ffan, Integer.parseInt(algName.split("-")[2]), n, merr, maxIter);
+
+			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
+			System.exit(0);
 		}
 
 	}
 
-	private static void runPSO(FFAN ffan, int neighborSize) {
+	private static void runPSO(FFAN ffan, int neighborSize, int N, double merr, int maxIter) {
 		double xMaxVal = 1;
 		double xMinVal = -1;
-		double vMaxVal = 2*Math.abs(xMaxVal - xMinVal);
+		double vMaxVal = 2 * Math.abs(xMaxVal - xMinVal);
 		double vMinVal = -vMaxVal;
-		int popSize = 60;
 		int d = ffan.getWeightsCount();
 		double c1 = 2;
 		double c2 = 2;
 		double wMax = 0.9;
 		double wMin = 0.4;
-		double merr = 0.03;
-		int maxIter = 500;
 		int wTMax = 500;
 		IReadOnlyDataset dataset = ffan.getDataset();
 
@@ -66,18 +72,18 @@ public class Main {
 			vMin[i] = vMinVal;
 		}
 
-		PSOAlgorithm alg = new PSOAlgorithm(ffan, popSize, neighborSize, d, c1, c2, xMax, xMin, vMax, vMin, wMax,
-				wMin, wTMax, merr, maxIter);
+		PSOAlgorithm alg = new PSOAlgorithm(ffan, N, neighborSize == 0 ? N - 1 : 1 + 2 * neighborSize, d, c1, c2, xMax,
+				xMin, vMax, vMin, wMax, wMin, wTMax, merr, maxIter);
 
 		Particle solution = alg.run();
-		
+
 		List<double[]> outputs = new LinkedList<>();
 		for (double[] inputs : dataset.getInputs()) {
 			double[] output = new double[3];
 			ffan.calcOutputs(inputs, solution.x, output);
 			outputs.add(output);
 		}
-		
+
 		int size = dataset.numberOfSamples();
 		for (int i = 0; i < size; i++) {
 			System.out.println("Ulaz: " + Arrays.toString(dataset.getInputs().get(i)));
@@ -90,33 +96,32 @@ public class Main {
 	}
 
 	private static String pretvoriUBin(double[] ds) {
-		return "[" + (ds[0] >= 0.5 ? 1.0 : 0.0) + ", " + (ds[1] >= 0.5 ? 1.0 : 0.0) + ", " + (ds[2] >= 0.5 ? 1.0 : 0.0) + "]";
+		return "[" + (ds[0] >= 0.5 ? 1.0 : 0.0) + ", " + (ds[1] >= 0.5 ? 1.0 : 0.0) + ", " + (ds[2] >= 0.5 ? 1.0 : 0.0)
+				+ "]";
 	}
-	
-	private static void runClonAlg(FFAN ffan) {
-		
+
+	private static void runClonAlg(FFAN ffan, int N, int maxIter, double merr) {
+
 		double max = 100;
 		double min = -100;
 		int dim = ffan.getWeightsCount();
-		int maxIter = 500;
-		int N = 100;
-		int d = 10;
-		int n = 20;
+		int d = N / 10;
+		int n = N / 5;
 		double beta = 1;
 		double ro = 2.5;
 		double sigma = 3;
-		
-		ClonAlg alg = new ClonAlg(max, min, dim, maxIter, N, d, n, beta, ro, ffan, sigma);
+
+		ClonAlg alg = new ClonAlg(merr, max, min, dim, maxIter, N, d, n, beta, ro, ffan, sigma);
 		DoubleArraySolution solution = alg.run();
 		IReadOnlyDataset dataset = ffan.getDataset();
-		
+
 		List<double[]> outputs = new LinkedList<>();
 		for (double[] inputs : dataset.getInputs()) {
 			double[] output = new double[3];
 			ffan.calcOutputs(inputs, solution.solution, output);
 			outputs.add(output);
 		}
-		
+
 		int size = dataset.numberOfSamples();
 		for (int i = 0; i < size; i++) {
 			System.out.println("Ulaz: " + Arrays.toString(dataset.getInputs().get(i)));
@@ -126,7 +131,7 @@ public class Main {
 		}
 		System.out.println(Arrays.toString(solution.solution));
 		System.out.println("Srednje kvadratno odstupanje: " + ffan.error(outputs));
-		
+
 	}
 
 	private static IReadOnlyDataset loadData(String path) throws IOException {
