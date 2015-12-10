@@ -1,10 +1,13 @@
 import java.util.Random;
 
-public abstract class StrategyDE {
+public abstract class StrategyDEBin {
 
 	protected Random rand;
 	
 	
+	public StrategyDEBin() {
+		rand = new Random();
+	}
 	
 	public abstract DoubleArraySolution mutation(double F, int i, Population pop);
 

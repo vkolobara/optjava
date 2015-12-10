@@ -18,9 +18,9 @@ public class ANNTrainer {
 		int sol_size = tdnn.getWeightsCount();
 		int max_iter = 200;
 		double merr = 0.01;
-		double f = 0.5;
+		double f = 1;
 		double cr = 0.3;
-		StrategyDE strategy = new StrategyDERandBin(2);
+		StrategyDEBin strategy = new StrategyDETargetToBestBin(1);
 		IEvaluator evaluator = new EvaluatorTDNN(tdnn);
 		
 		System.out.println(dataset.numberOfSamples() + " " + tdnn.getWeightsCount());

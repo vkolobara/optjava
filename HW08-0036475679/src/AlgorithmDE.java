@@ -7,12 +7,12 @@ public class AlgorithmDE {
 	private double merr;
 	private double F;
 	private double Cr;
-	private StrategyDE strategy;
+	private StrategyDEBin strategy;
 	private IEvaluator evaluator;
 	
 	
 	
-	public AlgorithmDE(int pop_size, int sol_size, int max_iter, double merr, double f, double cr, StrategyDE strategy,
+	public AlgorithmDE(int pop_size, int sol_size, int max_iter, double merr, double f, double cr, StrategyDEBin strategy,
 			IEvaluator evaluator) {
 		super();
 		this.pop_size = pop_size;
@@ -39,10 +39,13 @@ public class AlgorithmDE {
 		}
 		
 		int t=0;
+		System.out.println("Generacija: " + t + " - " + pop.getBest().fitness);
 		while (t++<max_iter) {
-			System.out.println("Generacija: " + t + " - " + pop.getBest().fitness);
+			
 			if (pop.getBest().fitness <= merr) break;
+			
 			Population newPop = new Population(pop_size);
+			
 			for (int i=0; i<pop_size; i++) {
 				DoubleArraySolution v = strategy.mutation(F, i, pop);
 				DoubleArraySolution u = strategy.crossover(pop.population.get(i), v, Cr);
@@ -57,6 +60,8 @@ public class AlgorithmDE {
 			
 			pop = newPop;
 			
+			System.out.println("Generacija: " + t + " - " + pop.getBest().fitness);
+
 		}
 		
 		

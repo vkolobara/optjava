@@ -1,0 +1,91 @@
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+public class Test {
+	
+	public static void main(String[] args) throws IOException {
+		IReadOnlyDataset dataset = loadData("A.dat", 600);
+		
+		ElmanNN elman = new ElmanNN(
+				new int[] {1, 10, 1},
+				new ITransferFunction[] { new SigmoidTransferFunction(), new SigmoidTransferFunction()},
+				dataset);
+		
+		int pop_size = 20;
+		int sol_size = elman.getWeightsCount() + elman.getContextSize();
+		int max_iter = 200;
+		double merr = 0.01;
+		double f = 1;
+		double cr = 0.5;
+		StrategyDEBin strategy = new StrategyDETargetToBestBin(1);
+		IEvaluator evaluator = new EvaluatorElman(elman);
+		
+		AlgorithmDE alg = new AlgorithmDE(pop_size, sol_size, max_iter, merr, f, cr, strategy, evaluator);
+		DoubleArraySolution sol = alg.run();
+		System.out.println(sol);
+		
+		for (int i=0; i<dataset.numberOfSamples(); i++) {
+			double[] outputs = new double[1];
+			elman.calcOutputs(dataset.getInputs().get(i), sol.solution, outputs);
+			System.out.println("Očekivano: " + dataset.getOutputs().get(i)[0] + "; Dobiveno: " + outputs[0]);
+		}
+		
+	}
+	
+	private static double[] normalize(String path) throws IOException {
+			
+		List<String> rows = Files.readAllLines(Paths.get(path));
+		
+		double[] normalized = new double[rows.size()];
+		
+		double min = Double.MAX_VALUE, max = -Double.MAX_VALUE;
+		
+		for (int i=0; i<normalized.length; i++) {
+			normalized[i] = Double.parseDouble(rows.get(i).trim());
+			if (normalized[i] < min) min = normalized[i];
+			if (normalized[i] > max) max = normalized[i];
+		}
+		
+		for (int i=0; i<normalized.length; i++) {
+			normalized[i] = 2.0*(normalized[i] - min) / (max - min) - 1;
+		}
+		System.out.println(Arrays.toString(normalized));
+		return normalized;
+	}
+
+
+	private static IReadOnlyDataset loadData(String path, int n) throws IOException {
+		List<double[]> inputs = new LinkedList<>(), outputs = new LinkedList<>();
+		int numberOfSamples = 0;
+		
+		double[] rows = normalize(path);
+		
+		if (n > rows.length) {
+			throw new IllegalArgumentException("Nema toliko mjerenja!");
+		}
+		
+		if (n==-1) n=rows.length;
+		
+		if (n < 0 ) {
+			throw new IllegalArgumentException("n mora biti veći od 0");
+		}
+		 
+		for (int i=0; i<n-1; i++) {
+			double[] input = new double[1];
+			input[0] = rows[i];
+			
+			
+			inputs.add(input);
+			outputs.add(new double[] { rows[i+1] });
+			
+			numberOfSamples++;
+		}
+		
+		return new IReadOnlyDataset(inputs, outputs, numberOfSamples);
+	}
+
+}

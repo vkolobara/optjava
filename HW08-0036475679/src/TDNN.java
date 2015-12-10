@@ -4,10 +4,10 @@ import java.util.List;
 
 public class TDNN {
 
-	private int weightsCount;
-	private int[] layers;
-	private ITransferFunction[] layerFunctions;
-	private IReadOnlyDataset dataset;
+	protected int weightsCount;
+	protected int[] layers;
+	protected ITransferFunction[] layerFunctions;
+	protected IReadOnlyDataset dataset;
 
 	/**
 	 * 
@@ -37,6 +37,10 @@ public class TDNN {
 		double[] prevNet = new double[inputs.length];
 		System.arraycopy(inputs, 0, prevNet, 0, inputs.length);
 		
+		calcNetWeight(weights, outputs, prevNet);
+	}
+
+	protected void calcNetWeight(double[] weights, double[] outputs, double[] prevNet) {
 		int weightIndex = 0;
 		
 		for (int i = 1; i < layers.length; i++) {
