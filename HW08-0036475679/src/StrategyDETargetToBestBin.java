@@ -13,6 +13,7 @@ public class StrategyDETargetToBestBin extends StrategyDEBin{
 	@Override
 	public DoubleArraySolution mutation(double F, int i, Population pop) {
 		int numOfX = 2*n;
+	
 		DoubleArraySolution x_best = pop.getBest();
 		DoubleArraySolution x_i = pop.population.get(i);
 		DoubleArraySolution v = x_i.duplicate();
@@ -21,9 +22,7 @@ public class StrategyDETargetToBestBin extends StrategyDEBin{
 		
 		Set<Integer> usedIndexes = new HashSet<>();
 		usedIndexes.add(i);
-		
-		
-		
+
 		int j, size=pop.population.size();
 		for (int k=0; k<numOfX; k++) {
 			while (!usedIndexes.add(j=rand.nextInt(size)));

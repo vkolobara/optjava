@@ -1,7 +1,6 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,11 +16,12 @@ public class Test {
 		
 		int pop_size = 20;
 		int sol_size = elman.getWeightsCount() + elman.getContextSize();
+		System.out.println(sol_size);
 		int max_iter = 200;
 		double merr = 0.01;
-		double f = 1;
-		double cr = 0.5;
-		StrategyDEBin strategy = new StrategyDETargetToBestBin(1);
+		double f = 0.2;
+		double cr = 0.75;
+		StrategyDEBin strategy = new StrategyDETargetToBestBin(2);
 		IEvaluator evaluator = new EvaluatorElman(elman);
 		
 		AlgorithmDE alg = new AlgorithmDE(pop_size, sol_size, max_iter, merr, f, cr, strategy, evaluator);
@@ -53,7 +53,6 @@ public class Test {
 		for (int i=0; i<normalized.length; i++) {
 			normalized[i] = 2.0*(normalized[i] - min) / (max - min) - 1;
 		}
-		System.out.println(Arrays.toString(normalized));
 		return normalized;
 	}
 
