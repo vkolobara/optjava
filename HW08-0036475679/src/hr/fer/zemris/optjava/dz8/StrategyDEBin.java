@@ -1,3 +1,4 @@
+package hr.fer.zemris.optjava.dz8;
 import java.util.Random;
 
 public abstract class StrategyDEBin {

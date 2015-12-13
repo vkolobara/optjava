@@ -1,3 +1,4 @@
+package hr.fer.zemris.optjava.dz8;
 import java.util.LinkedList;
 import java.util.List;
 
