@@ -28,7 +28,7 @@ public class AlgorithmNSGA {
 		this.d = d;
 	}
 
-	public DoubleArraySolution run() {
+	public Population run() {
 		Population pop = new Population(size);
 		RouletteWheelSelection selection = new RouletteWheelSelection();
 		
@@ -37,26 +37,26 @@ public class AlgorithmNSGA {
 			sol.randomize(max, min);
 			pop.addSolution(sol);
 		}
-		
+		evaluateFitness(pop);	
+
 				
 		for (int t=1; t<=max_iter; ++t) {
-			evaluateFitness(pop);	
-
 			System.out.println("Generacija " + t + " - Fitness : " + pop.getBest().fitness);
 			
 			Population newPop = new Population(size);
 			
 			while (!newPop.isFull()) {
 				DoubleArraySolution[] parents = selection.select(pop);
-				DoubleArraySolution child = GeneticOperators.crossover(parents[0], parents[1], max, min);
+				DoubleArraySolution child = GeneticOperators.crossoverBLX(parents[0], parents[1], max, min);
 				child = GeneticOperators.mutation(child, s, max, min);
 				newPop.addSolution(child);
 			}
 
 			pop = newPop;
+			evaluateFitness(pop);	
+
 		}
-		
-		return pop.getBest();
+		return pop;
 	}
 	
 	private void evaluateFitness(Population pop) {
@@ -67,7 +67,7 @@ public class AlgorithmNSGA {
 		double fMin = pop.getSize();
 		
 		for (Set<Integer> fronta : fronte) {
-			fMin*=0.9;
+			fMin*=0.95;
 			double newFMin = fMin;
 			for (int q : fronta) {
 				double nc = 0;
@@ -96,7 +96,7 @@ public class AlgorithmNSGA {
 		else return (1 - Math.pow(distance / share, alpha));
 	}
 
-	private List<Set<Integer>> calculateFronts(Population pop) {
+	public List<Set<Integer>> calculateFronts(Population pop) {
 		
 		List<Set<Integer>> fronte = new ArrayList<>();
 		List<Set<Integer>> S = new ArrayList<>();
@@ -104,7 +104,7 @@ public class AlgorithmNSGA {
 		fronte.add(new HashSet<>());
 		
 		int size = pop.getSize();
-		int k = 1;
+		int k = 0;
 		int[] n = new int[size];
 		for (int i=0; i<size; i++) {
 

@@ -2,14 +2,14 @@ import java.util.Random;
 
 public class GeneticOperators {
 
-	private static final double ALPHA = 0.3;
+	private static final double ALPHA = 0.2;
 	private static final double MUT_RATE = 0.02;
 	
 	
 	private static Random rand = new Random();
 	
 	
-	public static DoubleArraySolution crossover(DoubleArraySolution parent1, DoubleArraySolution parent2, double[] max, double[] min) {
+	public static DoubleArraySolution crossoverBLX(DoubleArraySolution parent1, DoubleArraySolution parent2, double[] max, double[] min) {
 
 		DoubleArraySolution child = parent1.newLikeThis();
 		Random rand = new Random();
@@ -33,6 +33,7 @@ public class GeneticOperators {
 		}
 		
 		return child;
+		
 	}
 	
 	public static DoubleArraySolution mutation(DoubleArraySolution child, double s, double[] max, double[] min) {
