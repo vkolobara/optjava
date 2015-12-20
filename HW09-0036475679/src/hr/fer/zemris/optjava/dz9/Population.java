@@ -1,3 +1,4 @@
+package hr.fer.zemris.optjava.dz9;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;

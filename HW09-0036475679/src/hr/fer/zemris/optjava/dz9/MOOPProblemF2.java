@@ -1,22 +1,18 @@
+package hr.fer.zemris.optjava.dz9;
 
 public class MOOPProblemF2 implements MOOPProblem{
 
-	
-	private int numberOfObjectives;
-	
-	public MOOPProblemF2(int numberOfObjectives) {
-		this.numberOfObjectives = numberOfObjectives;
-	}
+
 	
 
 	@Override
 	public int getNumberOfObjectives() {
-		return numberOfObjectives;
+		return 2;
 	}
 
 	@Override
 	public double[] evaluateSolution(double[] solution) {
-		double[] objectives = new double[numberOfObjectives];
+		double[] objectives = new double[getNumberOfObjectives()];
 		
 		objectives[0] = solution[0];
 		objectives[1] = (1 + solution[1]) / solution[0];

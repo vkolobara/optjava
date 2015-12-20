@@ -1,8 +1,9 @@
+package hr.fer.zemris.optjava.dz9;
 import java.util.Random;
 
 public class GeneticOperators {
 
-	private static final double ALPHA = 0.2;
+	private static final double ALPHA = 0.1;
 	private static final double MUT_RATE = 0.02;
 	
 	

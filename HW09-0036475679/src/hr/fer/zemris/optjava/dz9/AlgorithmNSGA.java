@@ -1,3 +1,4 @@
+package hr.fer.zemris.optjava.dz9;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -40,11 +41,9 @@ public class AlgorithmNSGA {
 		evaluateFitness(pop);	
 
 				
-		for (int t=1; t<=max_iter; ++t) {
-			System.out.println("Generacija " + t + " - Fitness : " + pop.getBest().fitness);
-			
+		for (int t=1; t<=max_iter; ++t) {			
 			Population newPop = new Population(size);
-			
+			newPop.addSolution(pop.getBest());
 			while (!newPop.isFull()) {
 				DoubleArraySolution[] parents = selection.select(pop);
 				DoubleArraySolution child = GeneticOperators.crossoverBLX(parents[0], parents[1], max, min);
@@ -61,23 +60,21 @@ public class AlgorithmNSGA {
 	
 	private void evaluateFitness(Population pop) {
 		pop.population.forEach(sol -> sol.objectives = problem.evaluateSolution(sol.solution));
-		
 		List<Set<Integer>> fronte = calculateFronts(pop);
 
 		double fMin = pop.getSize();
 		
 		for (Set<Integer> fronta : fronte) {
-			fMin*=0.95;
 			double newFMin = fMin;
 			for (int q : fronta) {
 				double nc = 0;
 				DoubleArraySolution qSol = pop.population.get(q);
-				qSol.fitness = fMin;
+				qSol.fitness = fMin*0.95;
 				
 				for (int k : fronta) {
 					nc += sh(qSol, pop.population.get(k));
 				}
-				
+
 				qSol.fitness/=nc;
 				
 				if (newFMin > qSol.fitness) {
@@ -91,7 +88,7 @@ public class AlgorithmNSGA {
 	}
 
 	private double sh(DoubleArraySolution sol1, DoubleArraySolution sol2) {
-		double distance = d.calcDistance(sol1.solution, sol2.solution);
+		double distance = d.calcDistance(sol1, sol2);
 		if (distance >= share) return 0;
 		else return (1 - Math.pow(distance / share, alpha));
 	}
@@ -145,7 +142,8 @@ public class AlgorithmNSGA {
 			k++;
 			fronte.add(Q);
 		}
-
+		
+		fronte.remove(fronte.size()-1);
 		return fronte;
 		
 	}
@@ -154,11 +152,11 @@ public class AlgorithmNSGA {
 		
 		boolean dominated = false;
 		
-		for (int i=0; i<sol_size; i++) {
+		for (int i=0; i<solution.objectives.length; i++) {
 			if(solution.objectives[i] < dominator.objectives[i]) {
 				dominated = false;
 				break;
-			} else if (solution.objectives[i] > dominator.objectives[i]) {
+			} else if (dominator.objectives[i] < solution.objectives[i]) {
 				dominated = true;
 			}
 		}
