@@ -11,16 +11,15 @@ import java.util.Set;
 public class AlgorithmNSGAII {
 
 	private double[] max, min;
-	private double alpha, share, s;
+	private double s;
 	private int size, sol_size, max_iter;
 	private MOOPProblem problem;
 
-	public AlgorithmNSGAII(double[] max, double[] min, double alpha, double s, int size, int sol_size,
+	public AlgorithmNSGAII(double[] max, double[] min, double s, int size, int sol_size,
 			int max_iter, MOOPProblem problem) {
 		super();
 		this.max = max;
 		this.min = min;
-		this.alpha = alpha;
 		this.s = s;
 		this.size = size;
 		this.sol_size = sol_size;
@@ -37,9 +36,10 @@ public class AlgorithmNSGAII {
 			sol.randomize(max, min);
 			pop.addSolution(sol);
 		}
-		evaluateFitness(pop);
 
 		for (int t = 1; t <= max_iter; ++t) {
+			evaluateFitness(pop);
+
 			System.out.println("Generacija: " + t);
 			Population children = new Population(size);
 			while (!children.isFull()) {
@@ -56,12 +56,11 @@ public class AlgorithmNSGAII {
 			
 			Population newPop = new Population(size);
 			
-			int count = 0, i = 0;
+			int i = 0;
 			while (!newPop.isFull()) {
-				if (fronte.get(i).size() + count < size) {
-					count += fronte.get(i).size();
-					i++;
+				if (fronte.get(i).size() + newPop.population.size() < size) {
 					fronte.get(i).forEach(index -> newPop.addSolution(union.population.get(index)));
+					i++;
 				} else {
 					List<DoubleArraySolution> lista = new ArrayList<>();
 					fronte.get(i).forEach(index -> lista.add(union.population.get(index)));
@@ -74,7 +73,6 @@ public class AlgorithmNSGAII {
 			}
 			
 			pop = newPop;
-			evaluateFitness(pop);
 
 		}
 		return pop;

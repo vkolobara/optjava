@@ -13,7 +13,6 @@ public class MOOP {
 			greska("Nedovoljno argumenata!");
 		}
 		try {
-			double alpha = 2;
 			double s = 0.1;
 
 			int size = 200;
@@ -41,7 +40,7 @@ public class MOOP {
 			
 			max_iter = Integer.parseInt(args[2]);
 			
-			AlgorithmNSGAII alg = new AlgorithmNSGAII(max, min, alpha, s, size, sol_size, max_iter, f);
+			AlgorithmNSGAII alg = new AlgorithmNSGAII(max, min, s, size, sol_size, max_iter, f);
 			Population sol = alg.run();
 
 			List<Set<Integer>> fronte = alg.calculateFronts(sol);
