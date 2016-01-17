@@ -2,7 +2,7 @@ package hr.fer.zemris.generic.ga;
 
 import java.util.List;
 
-import hr.fer.zemris.optjava.hw11.Population;
+import hr.fer.zemris.optjava.dz11.Population;
 import hr.fer.zemris.optjava.rng.IRNG;
 import hr.fer.zemris.optjava.rng.RNG;
 

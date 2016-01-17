@@ -12,8 +12,8 @@ import javax.swing.WindowConstants;
 
 import hr.fer.zemris.art.GrayScaleImage;
 import hr.fer.zemris.art.IscrtajTrenutni;
-import hr.fer.zemris.optjava.hw11.Evaluator;
-import hr.fer.zemris.optjava.hw11.Population;
+import hr.fer.zemris.optjava.dz11.Evaluator;
+import hr.fer.zemris.optjava.dz11.Population;
 import hr.fer.zemris.optjava.rng.EVOThread;
 
 public class GAAlgorithm1 implements GAAlgorithm{

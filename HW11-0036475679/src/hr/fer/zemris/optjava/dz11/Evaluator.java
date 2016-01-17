@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.hw11;
+package hr.fer.zemris.optjava.dz11;
 import hr.fer.zemris.art.GrayScaleImage;
 import hr.fer.zemris.generic.ga.GASolution;
 import hr.fer.zemris.generic.ga.IGAEvaluator;

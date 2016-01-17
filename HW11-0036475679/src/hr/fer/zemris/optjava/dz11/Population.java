@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.hw11;
+package hr.fer.zemris.optjava.dz11;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
