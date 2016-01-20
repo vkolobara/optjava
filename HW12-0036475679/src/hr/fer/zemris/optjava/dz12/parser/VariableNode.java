@@ -3,8 +3,6 @@ package hr.fer.zemris.optjava.dz12.parser;
 public class VariableNode extends Node {
 	
 	private String name;
-	private boolean value;
-	
 	
 	public VariableNode(String name) {
 		this.name = name;
@@ -12,11 +10,7 @@ public class VariableNode extends Node {
 
 	@Override
 	public boolean getValue() {
-		return Parser.values[Parser.nazivLokacijaMapa.get(name)];
+		return Node.values.get(Parser.nazivLokacijaMapa.get(name));
 	}
 	
-	public String getName() {
-		return name;
-	}
-
 }

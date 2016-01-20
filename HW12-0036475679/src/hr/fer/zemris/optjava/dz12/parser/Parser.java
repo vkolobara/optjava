@@ -4,37 +4,63 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
-	protected static Map<String, Integer> nazivLokacijaMapa = new HashMap<>();
-	public static boolean[] truthTable;
-	public static boolean[] values;
-	public static int numOfVariables = 0;
+	public static Map<String, Integer> nazivLokacijaMapa = new HashMap<>();
+	private boolean[] truthTable;
+	private int numOfVariables = 0;
+	private int clbNum = 0;
+	private String input;
 
-	public static void main(String[] args) {
+	public Parser(String expression, int clbNum) {
+		this.input = expression;
+		this.clbNum = clbNum;
+	}
 
-		int clbs = 6;
-
-		String input = ("((NOT S) AND A) OR (S AND B)");
+	public Node parseAndCalculateTruth() {
 		Node node = parse(input);
-		truthTable = new boolean[(int) Math.pow(2, numOfVariables)];
-		values = new boolean[numOfVariables + clbs];
+		truthTable = calculateTruth(node);
+		for (int i=numOfVariables; i<clbNum+numOfVariables; i++) {
+			nazivLokacijaMapa.put("CLB" + (i-numOfVariables), i);
+		}
+		
+		return node;
+	}
+	
+	public boolean[] getTruthTable() {
+		return truthTable;
+	}
 
+	private boolean[] calculateTruth(Node node) {
+		boolean[] truthTable = new boolean[(int) Math.pow(2, numOfVariables)];
+		Node.values.clear();
+		for (int i=0; i<numOfVariables; i++) {
+			Node.values.addElement(false);
+		}
 		for (int i = 0; i < truthTable.length; i++) {
 			String s = Integer.toBinaryString(i);
-			while (s.length() != numOfVariables) {
+			while (s.length() < numOfVariables) {
 				s = '0' + s;
 			}
 
 			int j = 0;
 			for (char c : s.toCharArray()) {
-				values[j++] = c == '0' ? false : true;
+				Node.values.set(j++, c == '0' ? false : true); 
 			}
 
 			truthTable[i] = node.getValue();
 		}
-
+		
+		return truthTable;
+	}
+	
+	public Map<String, Integer> getNazivLokacijaMapa() {
+		return nazivLokacijaMapa;
+	}
+	
+	public int getNumOfVariables() {
+		return numOfVariables;
 	}
 
-	public static Node parse(String current) {
+	private Node parse(String current) {
 		current = current.trim();
 		Node currNode = null;
 		int len = current.length();
@@ -79,9 +105,11 @@ public class Parser {
 					currNode = new Function1ArgNode((a) -> !a);
 					currNode.left = parse(current.substring(i + 3));
 				} else if (!current.contains(" ")) {
-					currNode = new VariableNode(current.substring(i, len));
-					if (!nazivLokacijaMapa.containsKey(((VariableNode) currNode).getName()))
-						nazivLokacijaMapa.put(((VariableNode) currNode).getName(), numOfVariables++);
+					String name = current.substring(i, len);
+					if (!nazivLokacijaMapa.containsKey(name)) {
+						nazivLokacijaMapa.put(name, numOfVariables++);
+					} 
+					currNode = new VariableNode(name);
 				} else {
 					continue;
 				}
