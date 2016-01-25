@@ -6,6 +6,7 @@ public class EVOThread extends Thread implements IRNGProvider {
 	private IRNG rng = new RNGRandomImpl();
 
 	public EVOThread() {
+		super();
 	}
 
 	public EVOThread(Runnable target) {

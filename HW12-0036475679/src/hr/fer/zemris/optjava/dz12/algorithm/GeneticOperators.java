@@ -43,12 +43,12 @@ public class GeneticOperators {
 		IRNG rng = RNG.getRNG();
 
 		Solution mutation = sol.duplicate();
-		int size = (int) Math.pow(2, Solution.inputNum) + Solution.inputNum;
+		int size = (int) Math.pow(2, sol.inputNum) + sol.inputNum;
 
 		for (int i=0; i<sol.data.length; i++) {
 			if (rng.nextDouble() <= MUT_RATE) {
-				if (i%size < Solution.inputNum) {
-					mutation.data[i] = rng.nextInt(0, Solution.numOfVariables + i/size);
+				if (i%size < sol.inputNum) {
+					mutation.data[i] = rng.nextInt(0, sol.numOfVariables + i/size);
 				} else {
 					mutation.data[i] = 1 - mutation.data[i];
 				}
