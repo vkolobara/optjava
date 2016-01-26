@@ -35,8 +35,23 @@ public class Main {
 		// MUX 4
 		// String expression = "(A AND (NOT S0) AND NOT(S1)) OR (B AND S0 AND
 		// (NOT S1)) OR (C AND (NOT S0) AND S1) OR (D AND S0 AND S1)";
+		
+		if (args.length != 3) {
+			System.err.println("Potrebna 3 argumenta: Broj ulaza, Broj CLB-ova, Izraz");
+			System.exit(1);
+		}
+		
+		try {
+			n = Integer.parseInt(args[0]);
+			numOfClb = Integer.parseInt(args[1]);
+			expression = args[2];
+		} catch (Exception e) {
+			System.err.println("Pogrešni argumenti");
+			System.exit(1);
+		}
+		
 		Parser parser = new Parser(expression, numOfClb);
-		Node root = parser.parseAndCalculateTruth();
+		parser.parseAndCalculateTruth();
 
 		int max_iter = 1000;
 		int pop_size = 200;
@@ -47,6 +62,8 @@ public class Main {
 
 		LinkedBlockingQueue<Solution> queue[] = new LinkedBlockingQueue[4];
 
+		int finN = n;
+		int finCLB = numOfClb;
 		ExecutorService executor = Executors.newFixedThreadPool(4, new ThreadFactory() {
 
 			@Override
@@ -63,7 +80,7 @@ public class Main {
 			executor.execute(new EVOThread(new Runnable() {
 				@Override
 				public void run() {
-					CLBAlgorithm alg = new CLBAlgorithm(n, numOfClb, parser.getNumOfVariables(), pop_size, max_iter,
+					CLBAlgorithm alg = new CLBAlgorithm(finN, finCLB, parser.getNumOfVariables(), pop_size, max_iter,
 							parser.getTruthTable(), queue, j);
 					best.add(alg.run());
 				}
