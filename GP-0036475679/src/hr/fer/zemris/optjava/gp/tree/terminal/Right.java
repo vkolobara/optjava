@@ -11,7 +11,7 @@ public class Right extends Terminal{
 	
 	@Override
 	public void execute(Eater eater, Node root) {
-		eater.right();
+		if (!eater.isDone()) eater.right();
 	}
 
 }

@@ -11,7 +11,7 @@ public class Left extends Terminal{
 	
 	@Override
 	public void execute(Eater eater, Node root) {
-		eater.left();
+		if (!eater.isDone()) eater.left();
 	}
 
 }

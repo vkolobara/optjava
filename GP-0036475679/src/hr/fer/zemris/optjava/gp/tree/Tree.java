@@ -7,6 +7,7 @@ import java.util.Random;
 import hr.fer.zemris.optjava.gp.Eater;
 import hr.fer.zemris.optjava.gp.tree.function.Function;
 import hr.fer.zemris.optjava.gp.tree.terminal.Terminal;
+import hr.fer.zemris.optjava.gp.tree.Node;
 
 public class Tree {
 
@@ -24,7 +25,48 @@ public class Tree {
 	public Node getRoot() {
 		return root;
 	}
+	
+	public Node getAtIndex(int index) {
+		return getAtIndex(index, root);
+	}
+	
+	private Node getAtIndex(int index, Node currNode) {
+		if (index == 0) return currNode;
+		index--;
+		for (Node child : currNode.children){
+			int size = child.size();
+			if (index < size) {
+				return getAtIndex(index, child);
+			} else {
+				index -= size;
+			}
+		}
+		
+		return null;
+	}
+	
+	public void setAtIndex(int index, Node node) {
+		setAtIndex(index, root, node);
+	}
+	
+	private void setAtIndex(int index, Node currNode, Node node) {
+		if (index < currNode.numOfChildren()) currNode.children.set(index, node);
+		else {
+			index--;
+			int num = currNode.getChildren().size();
+			for (int i=0; i<num; i++) {
+				int size = currNode.getChildAt(i).size();
+				if (index < size) {
+					setAtIndex(index, currNode.getChildAt(i), node);
+					break;
+				} else {
+					index -= size;
+				}
+			}
+		}
+	}
 
+ 
 	public void execute(Eater eater) {
 		root.execute(eater);
 	};
@@ -50,7 +92,7 @@ public class Tree {
 		root.setChildren(children);
 	}
 
-	private Node rampedBuild(int maxDepth, int currDepth) {
+	public Node rampedBuild(int maxDepth, int currDepth) {
 
 		Node novi;
 		if (rand.nextBoolean()) {
@@ -62,7 +104,7 @@ public class Tree {
 		return novi;
 	}
 
-	private Node fullBuild(int maxDepth, int currDepth) {
+	public Node fullBuild(int maxDepth, int currDepth) {
 		if (currDepth + 1 == maxDepth) {
 			Node novi = new Node(currDepth);
 			novi.setPrimitive(terminalSet.get(rand.nextInt(terminalSet.size())));
@@ -85,7 +127,7 @@ public class Tree {
 
 	}
 
-	private Node growBuild(int maxDepth, int currDepth) {
+	public Node growBuild(int maxDepth, int currDepth) {
 		Node novi = new Node(currDepth);
 
 		if (rand.nextBoolean() && currDepth + 1 < maxDepth) {
@@ -104,6 +146,10 @@ public class Tree {
 		}
 
 		return novi;
+	}
+	
+	public int size() {
+		return root.size();
 	}
 
 	public Tree duplicate() {

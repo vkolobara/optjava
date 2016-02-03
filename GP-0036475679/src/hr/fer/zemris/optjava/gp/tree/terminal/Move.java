@@ -11,7 +11,7 @@ public class Move extends Terminal{
 	
 	@Override
 	public void execute(Eater eater, Node root) {
-		eater.move();
+		if (!eater.isDone()) eater.move();
 	}
 
 }
