@@ -1,4 +1,4 @@
-package hr.fer.zemris.optjava.gp.tree;
+package hr.fer.zemris.optjava.dz13;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,6 +10,7 @@ import javax.swing.SwingUtilities;
 
 import hr.fer.zemris.optjava.gp.AntMap;
 import hr.fer.zemris.optjava.gp.Eater;
+import hr.fer.zemris.optjava.gp.tree.Algorithm;
 import hr.fer.zemris.optjava.gui.EaterGUI;
 
 
