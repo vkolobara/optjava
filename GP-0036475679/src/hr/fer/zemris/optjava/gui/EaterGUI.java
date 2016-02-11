@@ -1,15 +1,15 @@
 package hr.fer.zemris.optjava.gui;
 
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.geom.AffineTransform;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import hr.fer.zemris.optjava.gp.AntMap;
@@ -23,13 +23,26 @@ public class EaterGUI extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Eater eater;
+	private Point current;
+	private EaterComponent[][] comps;
 	private AntMap map;
-	private int index;
+	private int step;
 	
 	public EaterGUI(AntMap map, Eater e) {
+		setSize(600,600);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-		setLayout(new GridLayout(map.getHeight()+1, map.getWidth()));
-		JButton but = new JButton(new AbstractAction("Sljedeći korak") {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(map.getHeight(), map.getWidth()));
+		setLayout(new BorderLayout());
+		comps = new EaterComponent[map.getHeight()][map.getWidth()];
+		comps[0][0] = new EaterComponent();
+		comps[0][0].setDirection(Eater.RIGHT);
+		panel.add(comps[0][0]);
+
+		current = new Point(0,0);
+		int size = e.getVisited().size();
+		JLabel label = new JLabel("Koraci: 0/" + size);
+		JButton but = new JButton(new AbstractAction("Next") {
 			
 			/**
 			 * 
@@ -38,68 +51,36 @@ public class EaterGUI extends JFrame{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				PointDirection pd = eater.getVisited().get(EaterGUI.this.index);
+				PointDirection pd = eater.getVisited().get(EaterGUI.this.step);
+				comps[current.y][current.x].clear();
+				comps[pd.getPoint().y][pd.getPoint().x].setDirection(pd.getDirection());
+				current = pd.getPoint();
+				EaterGUI.this.step++;
+				label.setText("Koraci: "+step+"/" + size);
 			}
 		});
 		
 		for (int i=0; i<map.getHeight(); i++) {
-			for (int j=0; j<map.getWidth(); j++) 
-			add(new Arrow(), i, j);
+			for (int j=0; j<map.getWidth(); j++) {
+				if (i==0 && j==0) continue;
+				comps[i][j] = new EaterComponent();
+ 				if (map.getFoodMap()[i][j]) comps[i][j].setFood();
+				panel.add(comps[i][j]);
+			}
+			
 		}
+		add(panel, BorderLayout.CENTER);
+		panel = new JPanel();
+		panel.add(but);
+		panel.add(label);
+		add(panel, BorderLayout.SOUTH);
 		
 		this.eater = e;
 		this.map = map;
 		this.map.restore();
-		index = 0;
+		step = 0;
 	}
 	
 	
-	
-	class Arrow extends JComponent {
-		private final int ARR_SIZE = 4;
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-		
-		private int direction;
-		
-		public Arrow() {
-			direction = Eater.RIGHT;
-		}
-		
-		public void setDirection(int direction) {
-			this.direction = direction;
-		}
-		
-		public int getDirection() {
-			return direction;
-		}
-		
-		void drawArrow(Graphics g1, int x1, int y1, int x2, int y2) {
-            Graphics2D g = (Graphics2D) g1.create();
-
-            double dx = x2 - x1, dy = y2 - y1;
-            double angle = Math.atan2(dy, dx);
-            int len = (int) Math.sqrt(dx*dx + dy*dy);
-            AffineTransform at = AffineTransform.getTranslateInstance(x1, y1);
-            at.concatenate(AffineTransform.getRotateInstance(angle));
-            g.transform(at);
-
-            g.drawLine(0, 0, len, 0);
-            g.fillPolygon(new int[] {len, len-ARR_SIZE, len-ARR_SIZE, len},
-                          new int[] {0, -ARR_SIZE, ARR_SIZE, 0}, 4);
-        }
-		
-		@Override
-		protected void paintComponent(Graphics g) {
-			int x1 = getX();
-			int y1 = getY();
-			int x2 = x1 + getWidth();
-			int y2 = y1 + getHeight();
-			drawArrow(g, x1, y1, x2, y2);
-			super.paintComponent(g);
-		}
-	}
 
 }

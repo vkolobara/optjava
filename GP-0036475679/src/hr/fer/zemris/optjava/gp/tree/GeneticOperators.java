@@ -9,7 +9,8 @@ public class GeneticOperators {
 
 	private final static int MAX_NODES = 200;
 	private final static int MAX_DEPTH = 20;
-	private final static double MUT_RATE = 0.5;
+	private final static int MAX_TRIES = 20;
+	private final static double MUT_RATE = 0.6;
 	private final static double CROSS_RATE = 0.85;
 	private final static double REPROD_RATE = 0.01;
 	
@@ -18,23 +19,25 @@ public class GeneticOperators {
 	private static Random rand = new Random();
 
 	public static Tree crossover(Tree p1, Tree p2) {
-		int size1 = p1.size();
-		int size2 = p2.size();
-		if (rand.nextDouble() <= REPROD_RATE) return p1.duplicate();
-		if (rand.nextDouble() <= CROSS_RATE) {
-			Tree dup = p1.duplicate();
-			Node node = p2.getAtIndex(rand.nextInt(size2)).duplicate();
-			int index = rand.nextInt(size1);
-			int depth = dup.getAtIndex(index).getDepth();
-			
-			node.setDepth(depth);
-			if (node.getMostDeep() >= MAX_DEPTH) return p1;
-			
-			dup.setAtIndex(index, node);
-			if (dup.size() > MAX_NODES) return p1;
-			return dup;
+		
+		for (int i=0; i<MAX_TRIES; i++) {
+			int size1 = p1.size();
+			int size2 = p2.size();
+			if (rand.nextDouble() <= REPROD_RATE) return p1.duplicate();
+			if (rand.nextDouble() <= CROSS_RATE) {
+				Tree dup = p1.duplicate();
+				Node node = p2.getAtIndex(rand.nextInt(size2)).duplicate();
+				int index = rand.nextInt(size1);
+				int depth = dup.getAtIndex(index).getDepth();
+				
+				node.setDepth(depth);
+				if (node.getMostDeep() >= MAX_DEPTH) continue;
+				
+				dup.setAtIndex(index, node);
+				if (dup.size() > MAX_NODES) continue;
+				return dup;
+			}
 		}
-
 
 		return p2.duplicate();
 	}

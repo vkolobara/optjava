@@ -1,0 +1,24 @@
+Prog2
+IfFoodAhead
+  IfFoodAhead
+    IfFoodAhead
+      move
+      left
+    Prog2
+      move
+      right
+  IfFoodAhead
+    move
+    IfFoodAhead
+      left
+      Prog3
+        left
+        IfFoodAhead
+          move
+          left
+        Prog2
+          move
+          left
+IfFoodAhead
+  right
+  left

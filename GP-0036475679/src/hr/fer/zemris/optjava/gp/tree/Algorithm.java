@@ -1,7 +1,5 @@
 package hr.fer.zemris.optjava.gp.tree;
 
-import java.util.Arrays;
-
 import hr.fer.zemris.optjava.gp.AntMap;
 import hr.fer.zemris.optjava.gp.Eater;
 import hr.fer.zemris.optjava.gp.tree.function.IfFoodAhead;
@@ -17,16 +15,16 @@ public class Algorithm {
 	int n;
 	int pop_size;
 	int max_iter;
-	private AntMap map;
+	double min_fit;
 	
 	private final static int INIT_DEPTH = 6;
 	
-	public Algorithm(double p, int n, int pop_size, int max_iter, AntMap map) {
+	public Algorithm(double p, int n, int pop_size, int max_iter, double min_fit, AntMap map) {
 		this.p = p;
 		this.n = n;
 		this.pop_size = pop_size;
 		this.max_iter = max_iter;
-		this.map = map;
+		this.min_fit = min_fit;
 		Eater.map = map;
 
 	}
@@ -35,7 +33,7 @@ public class Algorithm {
 		Population pop = initPopulation();
 		pop.getPopulation().forEach(e -> evaluate(e));
 
-		for (int t=1; t<=max_iter; t++) {
+		for (int t=1; pop.getBest().getFitness() < min_fit && t<=max_iter; t++) {
 			System.out.println("Generacija " + t + ": Fitness - " + pop.getBest().getFitness());
 			Population newPop = new Population(pop_size);
 			newPop.add(pop.getBest());
